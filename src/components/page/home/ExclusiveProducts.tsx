@@ -11,7 +11,6 @@ export default function ExclusiveProducts() {
 
   return (
     <section className="py-12 bg-background">
-      <div className="container mx-auto">
         {/* Section Header */}
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-6">
@@ -25,7 +24,7 @@ export default function ExclusiveProducts() {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4">
           {isLoading ? (
             Array.from({ length: 12 }, (_, index) => (
               <ProductSkeleton key={index} />
@@ -38,7 +37,6 @@ export default function ExclusiveProducts() {
             </>
           )}
         </div>
-      </div>
     </section>
   );
 }

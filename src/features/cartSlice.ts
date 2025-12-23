@@ -6,6 +6,7 @@ type CartType = {
   cartTotal: number;
   items: CartItemType[];
 };
+
 const initialState: CartType = {
   cartTotal: 0,
   items: [],
@@ -25,10 +26,11 @@ const cartSlice = createSlice({
         price: Number(action.payload.price),
         image: action.payload.image,
         quantity: action.payload.quantity || 1,
-        variant_id: action.payload.variantId || '',
-        color: action.payload.variantId || '',
-        size: action.payload.variantId || '',
+        vid: action.payload.vid,
+        variant_id: action.payload.variant_id || '',
+        variant_key: action.payload.variant_key || '',
         slug: action.payload.slug,
+        variants: action.payload.variants
       });
     },
 
@@ -64,12 +66,10 @@ const cartSlice = createSlice({
       }
     },
     removeCartItem: (state, action) => {
-      const itemToRemove = state.items.find(
-        (item) => item.id === action.payload
-      );
+      const itemToRemove = state.items.find((item) => item.id === action.payload);
 
       if (itemToRemove) {
-        state.cartTotal -= itemToRemove.price * itemToRemove.quantity;
+        state.cartTotal -= (itemToRemove.price * itemToRemove.quantity);
         state.items = state.items.filter((item) => item.id !== action.payload);
       }
     },

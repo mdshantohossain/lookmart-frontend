@@ -1,15 +1,14 @@
-import { WishlistType } from "@/types";
+import { ProductType, WishlistType } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
 
-const initialState: WishlistType[] = [];
+const initialState: ProductType[] = [];
 
 export const wishlistSlice = createSlice({
   name: "wishlist",
   initialState,
   reducers: {
-    addWishlistItem: (state, action: PayloadAction<WishlistType>) => {
-      state.push({id: uuidv4(), ...action.payload });
+    addWishlistItem: (state, action: PayloadAction<ProductType>) => {
+      state.push(action.payload);
     },
 
     removeWishlistItem: (state, payload) => {

@@ -36,7 +36,7 @@ export default function CartItem({
         <div className="flex items-start space-x-4 aspect-square">
           <Link href={`/products/${item.slug}`}>
             <Image
-              src={item.image || "/placeholder.svg"}
+              src={item.image}
               alt={item.name}
               width={64}
               height={64}
@@ -45,7 +45,7 @@ export default function CartItem({
           </Link>
           <div className="flex-1 min-w-0">
             <div className="flex justify-between items-start mb-2">
-              <Link href={`/products/${item.slug}`}>{item.name}</Link>
+              <Link className="line-clamp-3" href={`/products/${item.slug}`}>{item.name}</Link>
               <Button
                 variant="ghost"
                 size="icon"
@@ -115,15 +115,13 @@ export default function CartItem({
       <div className="col-span-5 flex items-center space-x-4">
         <Link href={`/products/${item.slug}`}>
           <Image
-            src={item.image || "/placeholder.svg"}
-            alt={item.name}
-            width={64}
-            height={64}
+            src={item.image}
             className="w-16 h-16 object-cover rounded border flex-shrink-0"
+            alt={item.name}
           />
         </Link>
         <div>
-          <Link href={`/products/${item.slug}`}>
+          <Link className="line-clamp-3" href={`/products/${item.slug}`}>
             <h3 className="font-medium">{item.name}</h3>
           </Link>
         </div>

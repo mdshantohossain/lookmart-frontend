@@ -1,3 +1,8 @@
+export type DeliveryInfo = {
+  date: string;         // YYYY-MM-DD
+  dayOfWeek: string;    // Monday, Tuesday, etc.
+};
+
 export type SubCategoryType = {
   id: number;
   category_id: number;
@@ -19,22 +24,25 @@ export type LoginValuesType = {
   password: string;
 };
 
-// cart/wishlist item
-export interface ItemType {
-    product_id: number;
-    name: string;
-    price: number;
-    image: string;
-    quantity?: number;
-    color?: string;
-    size?: string;
-    variant_id?: number;
-    slug: string;
-  }
-
 export type ResetPasswordType = {
   email: string;
 };
+
+export interface ProcessedVariantKeyType {
+  id: number;
+  vid: string | null;
+  variant_key: string;
+  variant_sku: string;
+  selling_price: string;
+}
+
+export interface ProcessedVariantType {
+  [color: string]: {
+    image: string;
+    sizes: { [size: string]: ProcessedVariantKeyType };
+    default: ProcessedVariantKeyType | null;
+  };
+}
 
 // cart product type
 export type CartItemType = {
@@ -45,9 +53,10 @@ export type CartItemType = {
   quantity: number;
   image: string;
   variant_id?: number;
-  color?: string;
-  size?: string;
+  vid?: string;
+  variant_key?: string;
   slug: string;
+  variants?: ProcessedVariantType;
 };
 
 export type WishlistType = Omit<CartItemType, "quantity">;
@@ -75,7 +84,7 @@ export type ReviewType = {
   product_id: number;
   user: UserType;
   rating?: string;
-  comment?: string;
+  message?: string;
   created_at: string;
 }
 
@@ -88,11 +97,16 @@ export type VariantType = {
   id: number;
   vid?: string;
   sku?: string;
-  color?: string;
   variant_key?: string;
+  selling_price?: string;
   image: string;
 }
 
+type PolicyType = {
+  id: number;
+  title: string;
+  image?: string;
+}
 export type ProductType = {
   id: number;
   category_id: number;
@@ -102,26 +116,28 @@ export type ProductType = {
   name: string;
   sku: string;
   quantity: number;
-  regular_price: number;
+  original_price: number;
   selling_price: number;
-  main_image: string;
+  image_thumbnail: string;
+  video_thumbnail?: string;
   category: CategoryType;
   is_trending?: string;
   slug: string;
   short_description: string;
   long_description: string;
   status: number;
-  created_at: string;
+  total_day_to_delivery?: number;
+  total_sold?: string;
+  is_free_delivery?: number;
   updated_at: string;
   variants_title: string;
   reviews: ReviewType[];
   other_images: OtherImageType[];
-  colors: string[];
-  sizes: string[];
   features: string[];
   tags: string[];
   reviews_count: number;
   reviews_avg_rating: string|null;
-  variants: VariantType[],
-  variant_json?: string
+  variants: VariantType[];
+  policies: PolicyType[];
+  created_at: string;
 };
