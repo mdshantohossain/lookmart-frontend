@@ -4,19 +4,8 @@ import {
   removeCartItem as removeItem,
 } from "@/features/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
+import { CartItemType } from "@/types";
 import { toast } from "react-toastify";
-
-interface ItemType {
-  product_id: number;
-  name: string;
-  price: number;
-  image: string;
-  quantity?: number;
-  color?: string;
-  size?: string;
-  variant_id?: number;
-  slug: string;
-}
 
 export const useCart = () => {
   const dispatch = useAppDispatch();
@@ -27,7 +16,7 @@ export const useCart = () => {
     return items.some((item) => item.product_id === product_id);
   };
 
-  const addToCart = (product: ItemType) => {
+  const addToCart = (product: Omit<CartItemType, "id">) => {
     if (isExistsOnCart(product.product_id)) return;
 
     dispatch(addCartItem(product));

@@ -11,7 +11,6 @@ export default function TrendingProducts() {
   
   return (
     <section className="py-12 bg-background">
-      <div className="container mx-auto">
         {/* Section Header */}
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-6">
@@ -37,7 +36,6 @@ export default function TrendingProducts() {
             </>
           )}
         </div>
-      </div>
     </section>
   );
 }

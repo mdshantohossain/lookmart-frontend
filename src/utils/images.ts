@@ -14,6 +14,10 @@ import proGamingController from "@/assets/images/professional-gaming-controller.
 import facebook from "@/assets/images/facebook.png";
 import google from "@/assets/images/google.png";
 import appLogo from "@/assets/images/logo.png";
+import userIcon from "@/assets/images/user.png";
+import emptyCart from "@/assets/images/cart.png";
+import policyIcon from "@/assets/images/insurance.png";
+import emptyImage from "@/assets/images/empty-photo.png";
 
 export default {
   gamingLaptop,
@@ -30,5 +34,9 @@ export default {
   proGamingController,
   facebook,
   google,    
-  appLogo
+  appLogo,
+  userIcon,
+  emptyCart,
+  policyIcon,
+  emptyImage
 };

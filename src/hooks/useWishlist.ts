@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import { addWishlistItem, removeWishlistItem } from "@/features/wishlilstSlice";
-import { ItemType, ProductType } from "@/types";
+import { CartItemType, ProductType } from "@/types";
 import { toast } from "react-toastify";
 import { useCreateWishlist } from "./api/useWishlist";
 import { v4 as uuidv4 } from 'uuid';
@@ -14,25 +14,18 @@ export const useWishlist = () => {
   const wishlistMutaion = useCreateWishlist();
 
   const isExistsOnWishlist = (product_id: number) => {
-    return wishlists.some((item) => item.product_id === product_id);
+    return wishlists.some((item) => item.id === product_id);
   };
 
-  const addWishlist = (product: ItemType) => {
+  const addWishlist = (product: ProductType) => {
     if(!isAuthenticated) {
       return router.push("/login");
     }
     
-    if(isExistsOnWishlist(product.product_id)) return; // return if exists
+    if(isExistsOnWishlist(product.id)) return; // return if exists
 
     // add to wishlist
-    dispatch(addWishlistItem({
-      id: uuidv4(),
-      product_id: product.product_id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      slug: product.slug
-    }));
+    dispatch(addWishlistItem(product));
 
     toast.success("Product added to wishlist");
   };

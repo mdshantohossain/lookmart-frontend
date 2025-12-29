@@ -19,12 +19,9 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useCategories } from "@/hooks/api/useCategories";
 import Link from "next/link";
-import { trucateString } from "@/utils/helper";
-import { useCart } from "@/hooks/useCart";
-import { ProductType } from "@/types";
-import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
 import useCurrentUrl from "@/hooks/useCurrentUrl";
+import CategoryDropdownProduct from "./CategoryDropdownProduct";
+import Product from "./Product";
 
 export function CategoryDropdown() {
   const [isDesktopOpen, setIsDesktopOpen] = useState(false);
@@ -34,8 +31,6 @@ export function CategoryDropdown() {
 
   // hooks
   const { data: categories, isLoading } = useCategories();
-  const { isExistsOnCart, addToCart } = useCart();
-  const router = useRouter();
   const { isSubCategoryActive, isCategoryActive } = useCurrentUrl();
 
   useEffect(() => {
@@ -57,35 +52,19 @@ export function CategoryDropdown() {
     }
 
     if (isDesktopOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("mouseup", handleClickOutside);
       return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener("mouseup", handleClickOutside);
       };
     }
   }, [isDesktopOpen]);
 
   const selectedCategory = categories?.find((c) => c.id === hoveredCategory);
 
-  // handle shop now
-  const handleShopNow = (product: ProductType) => {
-    isDesktopOpen ? setIsDesktopOpen(false) : setIsMobileOpen(false);
-    if (!isExistsOnCart(product.id)) {
-      addToCart({
-        product_id: product.id,
-        name: product.name,
-        price: product.selling_price,
-        image: product.main_image,
-        slug: product.slug,
-      });
-    }
-
-    return router.push("/checkout");
-  };
-
   return (
-    <div className="relative">
+    <div ref={desktopDropdownRef} className="relative">
       {/* ---------- DESKTOP DROPDOWN ---------- */}
-      <div ref={desktopDropdownRef} className="hidden md:flex">
+      <div  className="hidden md:flex">
         <div
           onClick={() => setIsDesktopOpen(!isDesktopOpen)}
           className="flex  items-center bg-red-500 rounded-md p-1 md:p-2 cursor-pointer"
@@ -97,7 +76,7 @@ export function CategoryDropdown() {
 
       {/* Dropdown Menu - CHANGE: Made fully responsive with adaptive sizing */}
       {isDesktopOpen && (
-        <div className="absolute top-full left-0 right-0 md:left-0 md:right-auto mt-2 z-50 shadow-2xl rounded-lg overflow-hidden bg-white">
+        <div className="absolute top-full left-0 right-0 md:left-0 md:right-auto mt-2 z-50 shadow-2xl rounded-lg overflow-hidden bg-background">
           {/* Mobile: Full screen modal style */}
           <div
             className="md:hidden fixed inset-0 bg-black/30 z-40"
@@ -120,7 +99,7 @@ export function CategoryDropdown() {
                     "w-full flex items-center gap-3 px-4 py-3.5 md:py-3 text-left transition-all duration-150 border-l-4 hover:cursor-pointer",
                     hoveredCategory === category.id
                       ? "bg-red-50 border-l-4 border-red-500"
-                      : "border-l-4 border-transparent hover:bg-gray-50 md:hover:bg-gray-50"
+                      : "border-l-4 border-transparent hover:bg-card"
                   )}
                 >
                   <span className="text-lg md:text-xl flex-shrink-0">
@@ -137,7 +116,7 @@ export function CategoryDropdown() {
                         "font-semibold transition-colors duration-150 truncate text-sm md:text-base",
                         hoveredCategory === category.id
                           ? "text-red-600"
-                          : "text-gray-900"
+                          : "text-forground"
                       )}
                     >
                       {category.name}
@@ -161,9 +140,9 @@ export function CategoryDropdown() {
             {hoveredCategory && selectedCategory && (
               <div className="md:flex md:gap-0 flex-col md:flex-row">
                 {/* Subcategories */}
-                <div className="w-full md:w-72 bg-gradient-to-b from-gray-50 to-white p-4 md:p-5 space-y-2 md:space-y-3 border-t md:border-t-0 md:border-l border-gray-200 overflow-y-auto max-h-72 md:max-h-96">
+                <div className="w-full md:w-72  p-4 md:p-5 space-y-2 md:space-y-3 border-t md:border-t-0 md:border-l border-gray-200 overflow-y-auto max-h-72 md:max-h-96">
                   <div className="mb-3 md:mb-4 pb-2 md:pb-3 border-b border-gray-200">
-                    <h3 className="font-bold text-gray-900 text-base md:text-lg">
+                    <h3 className="font-bold  text-base md:text-lg">
                       {selectedCategory.name}
                     </h3>
                     <p className="text-xs md:text-sm text-gray-500 mt-1">
@@ -179,7 +158,7 @@ export function CategoryDropdown() {
                         onClick={() => setIsDesktopOpen(false)}
                       >
                         <div className="w-full text-left px-3 py-2 md:py-2.5 hover:bg-white rounded-md transition-all duration-150 group hover:cursor-pointer">
-                          <p className="font-medium text-gray-900 group-hover:text-red-600 transition-colors duration-150 text-sm md:text-base">
+                          <p className="font-medium group-hover:text-red-600 transition-colors duration-150 text-sm md:text-base">
                             {subcat.name}
                           </p>
                           {subcat.description && (
@@ -196,84 +175,40 @@ export function CategoryDropdown() {
                 {/* Offers Panel - CHANGE: Made responsive with proper mobile sizing */}
                 {selectedCategory.products &&
                   selectedCategory.products.length > 0 && (
-                    <div className="w-full md:w-96 bg-gradient-to-b from-red-50 via-white to-orange-50 p-4 md:p-6 border-t md:border-t-0 md:border-l border-red-100 overflow-y-auto max-h-72 md:max-h-96">
+                    <div className="w-full md:w-96 p-4 md:p-6 border-t md:border-t-0 md:border-l border-red-100 overflow-y-auto max-h-72 md:max-h-96">
                       {/* Header */}
                       <div className="flex items-center gap-2 mb-4 md:mb-5">
                         <Sparkles
                           size={18}
                           className="md:w-5 md:h-5 text-red-500 flex-shrink-0"
                         />
-                        <h3 className="font-bold text-base md:text-lg text-gray-900">
+                        <h3 className="font-bold text-base md:text-lg">
                           Special Offers
                         </h3>
                       </div>
 
                       {/* Offers Grid - CHANGE: Responsive card sizing */}
                       <div className="space-y-2 md:space-y-3">
-                        {selectedCategory.products.map((categoryProduct) => (
-                          <div
-                            key={categoryProduct.id}
-                            className="bg-white rounded-xl border border-red-100 hover:border-red-300 hover:shadow-lg transition-all duration-200 overflow-hidden group"
-                          >
-                            {/* Image Container */}
-                            <div className="relative bg-gradient-to-br from-gray-100 to-gray-50 h-28 md:h-40 overflow-hidden">
-                              <Link
-                                onClick={() => setIsDesktopOpen(false)}
-                                href={`/products/${categoryProduct.slug}`}
-                              >
-                                <Image
-                                  src={categoryProduct.main_image}
-                                  fill
-                                  alt={categoryProduct.name}
-                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 cursor-pointer"
-                                />
-                              </Link>
-
-                              {/* Discount Badge */}
-                              {categoryProduct.discount && (
-                                <div className="absolute top-2 right-2 bg-red-500 text-white px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-bold shadow-md">
-                                  -{categoryProduct.discount}
-                                </div>
-                              )}
+                        {selectedCategory.products.map(
+                          (categoryProduct, index) => (
+                            <div
+                              className="bg-card rounded-xl border border-red-100 hover:border-red-300 hover:shadow-lg transition-all duration-200 overflow-hidden group"
+                              key={index}
+                            >
+                              <Product
+                                product={categoryProduct}
+                                isDeviceOpen={isDesktopOpen}
+                                setIsDeviceOpen={setIsDesktopOpen}
+                              />
                             </div>
-
-                            {/* Content */}
-                            <div className="p-2 md:p-3">
-                              <Link
-                                href={`/products/${categoryProduct.slug}`}
-                                onClick={() => setIsDesktopOpen(false)}
-                                className="text-xs md:text-sm font-semibold text-gray-900 line-clamp-2 mb-2 group-hover:text-red-600 transition-colors cursor-pointer"
-                              >
-                                {trucateString(categoryProduct.name, 45)}
-                              </Link>
-
-                              {/* Pricing */}
-                              <div className="flex items-center gap-2 mb-2 md:mb-3">
-                                <span className="text-base md:text-lg font-bold text-red-600">
-                                  ${categoryProduct.selling_price.toFixed(0)}
-                                </span>
-                                {categoryProduct.regular_price && (
-                                  <span className="text-xs md:text-sm text-gray-400 line-through">
-                                    ${categoryProduct.regular_price.toFixed(0)}
-                                  </span>
-                                )}
-                              </div>
-
-                              {/* CTA Button */}
-                              <Link
-                                href={`/checkout`}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleShopNow(categoryProduct);
-                                }}
-                              >
-                                <Button className="w-full bg-gradient-to-r hover:cursor-pointer from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-all duration-200 transform group-hover:scale-105">
-                                  Shop Now
-                                </Button>
-                              </Link>
-                            </div>
-                          </div>
-                        ))}
+                            // <CategoryDropdownProduct
+                            //   key={index}
+                            //   product={categoryProduct}
+                            //   setIsDeviceOpen={setIsDesktopOpen}
+                            //   isDeviceOpen={isDesktopOpen}
+                            // />
+                          )
+                        )}
                       </div>
 
                       {/* View All Button */}
@@ -378,71 +313,23 @@ export function CategoryDropdown() {
 
                         {/* Horizontal scrollable offers list */}
                         <div className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 scroll-smooth">
-                          {category?.products.map((categoryProduct) => (
+                          {category?.products.map((categoryProduct, index) => (
                             <div
-                              key={categoryProduct.id}
-                              className="flex-shrink-0 w-44 sm:w-52 rounded-xl border border-red-100 hover:border-red-300 hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer snap-center"
+                              key={index}
+                              className="flex-shrink-0 w-52 sm:w-65 rounded-xl border border-red-100 hover:border-red-300"
                             >
-                              {/* Image Container */}
-                              <div className="relative bg-gradient-to-br from-gray-100 to-gray-50 h-28 md:h-36 overflow-hidden">
-                                <Link
-                                  href={`/products/${categoryProduct.slug}`}
-                                  onClick={() => setIsMobileOpen(false)}
-                                >
-                                  <Image
-                                    src={categoryProduct.main_image}
-                                    fill
-                                    alt={categoryProduct.name}
-                                    className="object-cover group-hover:scale-110 transition-transform duration-300"
-                                  />
-                                </Link>
-
-                                {/* Discount Badge */}
-                                {categoryProduct.discount && (
-                                  <div className="absolute top-2 right-2 bg-red-500 text-white px-2 md:px-3 py-1 rounded-full text-xs font-bold shadow-md">
-                                    -{categoryProduct.discount}
-                                  </div>
-                                )}
-                              </div>
-
-                              {/* Offer Details */}
-                              <div className="p-2 md:p-3">
-                                <Link
-                                  href={`/products/${categoryProduct.slug}`}
-                                  onClick={() => setIsMobileOpen(false)}
-                                  className="text-xs md:text-sm font-semibold line-clamp-2 mb-1 group-hover:text-red-600 transition-colors"
-                                >
-                                  {categoryProduct.name}
-                                </Link>
-
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className="text-sm font-bold">
-                                    ${categoryProduct.selling_price?.toFixed(0)}
-                                  </span>
-                                  {categoryProduct.regular_price && (
-                                    <span className="text-xs text-gray-400 line-through">
-                                      $
-                                      {categoryProduct.regular_price?.toFixed(
-                                        0
-                                      )}
-                                    </span>
-                                  )}
-                                </div>
-
-                                {/* Shop Button */}
-                                <Link
-                                  href={`/checkout`}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleShopNow(categoryProduct);
-                                  }}
-                                >
-                                  <Button className="w-full bg-gradient-to-r hover:cursor-pointer from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-1 md:py-2 rounded-md text-xs md:text-sm font-semibold transition-all duration-200 transform group-hover:scale-105">
-                                    Shop Now
-                                  </Button>
-                                </Link>
-                              </div>
+                              <Product
+                                product={categoryProduct}
+                                isDeviceOpen={isMobileOpen}
+                                setIsDeviceOpen={setIsMobileOpen}
+                              />
                             </div>
+                            // <CategoryDropdownProduct
+                            // key={index}
+                            //     product={categoryProduct}
+                            //     setIsDeviceOpen={setIsMobileOpen}
+                            //     isDeviceOpen={isMobileOpen}
+                            //   />
                           ))}
                         </div>
                       </div>

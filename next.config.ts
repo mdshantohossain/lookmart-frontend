@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "192.168.0.106"
       },
+       {
+        protocol: "http",
+        hostname: "http://127.0.0.1"
+      },
       {
         protocol: 'https',
         hostname: 'fastly.picsum.photos',
