@@ -18,7 +18,7 @@ const testimonials: Testimonial[] = [
     id: 1,
     name: "John Becker",
     role: "Designer",
-    avatar: "/placeholder.svg?height=80&width=80&text=JB",
+    avatar: "https://picsum.photos/seed/picsum/200/300",
     content:
       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam amet animi blanditiis consequatur debitis dicta distinctio, enim error eum iste libero modi nam natus perferendis possimus quasi sint sit tempora voluptatem.",
   },
@@ -26,7 +26,7 @@ const testimonials: Testimonial[] = [
     id: 2,
     name: "Sarah Johnson",
     role: "Developer",
-    avatar: "/placeholder.svg?height=80&width=80&text=SJ",
+    avatar: "https://picsum.photos/seed/picsum/200/300",
     content:
       "Exceptional service and quality products! The team went above and beyond to ensure our project was completed on time. Their attention to detail and professional approach made all the difference.",
   },
@@ -34,7 +34,7 @@ const testimonials: Testimonial[] = [
     id: 3,
     name: "Michael Chen",
     role: "Product Manager",
-    avatar: "/placeholder.svg?height=80&width=80&text=MC",
+    avatar: "https://picsum.photos/seed/picsum/200/300",
     content:
       "Outstanding experience from start to finish. The innovative solutions provided exceeded our expectations and helped us achieve our business goals faster than anticipated.",
   },
@@ -42,7 +42,7 @@ const testimonials: Testimonial[] = [
     id: 4,
     name: "Emily Davis",
     role: "Marketing Director",
-    avatar: "/placeholder.svg?height=80&width=80&text=ED",
+    avatar: "https://picsum.photos/seed/picsum/200/300",
     content:
       "Professional, reliable, and creative team. They understood our vision perfectly and delivered results that truly impressed our stakeholders. Highly recommended!",
   },
@@ -115,7 +115,7 @@ export default function TestimonialsSection() {
                 <div className="flex items-center justify-center space-x-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={currentTestimonial.avatar || "/placeholder.svg"}
+                    src={currentTestimonial.avatar}
                     alt={currentTestimonial.name}
                     className="w-16 h-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
                   />

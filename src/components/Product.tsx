@@ -18,7 +18,6 @@ import { useAppSelector } from "@/features/hooks";
 import { formatPrice, getDeliveryDateInfo } from "@/utils/helper";
 import ProductMedia from "./ProductMedia";
 import { useProcessColorAndSize } from "@/hooks/useProcessColorAndSize";
-import router from "next/router";
 import React from "react";
 
 type Props = {
@@ -55,7 +54,7 @@ export default function Product({
   );
 
   // add to wishlist
-  const addToWishlist = (e: React.MouseEvent ,product: ProductType) => {
+  const addToWishlist = (e: React.MouseEvent, product: ProductType) => {
     if (!isAuthenticated) {
       setIsDeviceOpen && setIsDeviceOpen && setIsDeviceOpen(false);
       return navigation.push("/login");
@@ -100,8 +99,7 @@ export default function Product({
         }}
         className="absolute top-1 right-1 z-10 p-1 cursor-pointer"
         aria-label="Add to wishlist"
-        disabled={isWishlisted}
-      >
+        disabled={isWishlisted}>
         <Heart
           className={cn(
             "w-5 h-5 transition-colors",
@@ -115,8 +113,7 @@ export default function Product({
       {/* Product Image */}
       <Link
         href={`/products/${product.slug}`}
-        onClick={() => setIsDeviceOpen && setIsDeviceOpen(false)}
-      >
+        onClick={() => setIsDeviceOpen && setIsDeviceOpen(false)}>
         <ProductMedia product={product} />
       </Link>
 
@@ -125,8 +122,7 @@ export default function Product({
         <Link href={`/products/${product.slug}`}>
           <h3
             className="text-foreground mb-1 line-clamp-4 hover:cursor-pointer"
-            onClick={() => setIsDeviceOpen && setIsDeviceOpen(false)}
-          >
+            onClick={() => setIsDeviceOpen && setIsDeviceOpen(false)}>
             {product.name}
           </h3>
         </Link>
@@ -171,7 +167,9 @@ export default function Product({
         <div className="flex items-center gap-1.5 text-[10px] text-green-600 font-medium bg-green-50 dark:bg-green-900/20 w-fit px-2 py-1 rounded-full mb-4">
           <Truck className="w-3 h-3" />
           <span>
-            {product.is_free_delivery === 1 ? "Free delivery: " : "Delivery: "}{" "}
+            {product.is_free_delivery === 1
+              ? "Free delivery: "
+              : "Delivery on: "}{" "}
             {date}, {dayOfWeek}
           </span>
         </div>
@@ -181,8 +179,7 @@ export default function Product({
           <Button
             onClick={() => handleShopNow(product)}
             className="w-[83%] bg-red-600 hover:bg-red-500 text-white cursor-pointer"
-            size="sm"
-          >
+            size="sm">
             Shop Now
           </Button>
 
@@ -199,8 +196,7 @@ export default function Product({
         ? "bg-green-200 text-green-600 hover:bg-green-100"
         : "bg-muted text-black dark:text-white hover:bg-red-600 hover:text-white"
     }
-  `}
-          >
+  `}>
             {isExistedToCart ? <ShoppingBag /> : <ShoppingCart />}
           </Button>
         </div>

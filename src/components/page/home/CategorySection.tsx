@@ -1,5 +1,4 @@
 "use client";
-
 import TopCategorySkeleton from "@/components/skeleton/TopCategorySkeleton";
 import { useCategories } from "@/hooks/api/useCategories";
 import { CategoryType } from "@/types";
@@ -15,21 +14,25 @@ export default function CategorySection() {
   }
 
   return (
-    <div className="py-12 px-4 bg-card rounded-lg">
-      {/* Title */}
-      <div className="text-center mb-8 px-4">
-        <h2 className="text-2xl md:text-3xl font-bold">Categories</h2>
-        <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
-          Get the best deals across our most popular categories. Quality
-          products, trusted brands, and effortless shopping all in one place.
+    <section className="py-16 px-4 max-w-7xl mx-auto">
+      {/* Title Section */}
+      <div className="text-center mb-12 space-y-3">
+        <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Shop by <span className="text-primary">Category</span>
+        </h2>
+        <p className="text-slate-500 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+          Explore our wide range of premium products across various categories, 
+          handpicked just for your needs.
         </p>
       </div>
 
-      {/* Grid Category Boxes */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 px-4">
+      {/* Centered Grid Container */}
+      <div className="flex flex-wrap justify-center gap-6 md:gap-8">
         {isLoading
-          ? Array.from({ length: 12 }, (_, i) => (
-              <TopCategorySkeleton key={i} />
+          ? Array.from({ length: 6 }, (_, i) => (
+              <div key={i} className="w-[140px] md:w-[170px]">
+                <TopCategorySkeleton />
+              </div>
             ))
           : categories.map((category, i) => (
               <Link
@@ -37,24 +40,45 @@ export default function CategorySection() {
                   pathname: "/products",
                   query: { category: category.slug },
                 }}
-                key={i}
-                className="group"
+                key={category.slug || i}
+                className="group relative flex flex-col items-center w-[150px] md:w-[170px]"
               >
-                <div className="rounded-xl border shadow-sm flex flex-col items-center justify-center p-4 hover:shadow-md transition-all text-center h-full">
-                  <Image
-                    src={category.image}
-                    alt={category.name}
-                    width={50}
-                    height={50}
-                    className="object-contain mb-2"
-                  />
-                  <span className="text-foreground font-medium text-md truncate">
-                    {category.name}
-                  </span>
+                {/* Image Bubble */}
+                <div className="relative w-24 h-24 md:w-32 md:h-32 mb-4">
+                  {/* Decorative Background Circle */}
+                  <div className="absolute inset-0 bg-slate-100 rounded-full transition-all duration-500 group-hover:bg-primary/10 group-hover:scale-110 group-hover:rotate-6" />
+                  
+                  {/* Actual Image */}
+                  <div className="absolute inset-0 flex items-center justify-center p-5">
+                    <Image
+                      src={category.image}
+                      alt={category.name}
+                      width={80}
+                      height={80}
+                      className="object-contain rounded-full transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
+
+                  {/* Product Count Badge (Unique Element) */}
+                  <div className="absolute -top-1 -right-1 shadow-md border border-slate-100 text-[10px] md:text-xs font-bold px-2 py-1 rounded-full text-primary translate-y-2 transition-all duration-300 group-hover:translate-y-0">
+                    {/* Placeholder for count - adjust field name as per your API */}
+                    {Math.floor(Math.random() * 200) + 50}+ 
+                  </div>
                 </div>
+
+                {/* Text Content */}
+                <div className="text-center space-y-1">
+                  <h3 className="text-sm md:text-base font-bold text-slate-800 group-hover:text-primary transition-colors truncate w-full px-2">
+                    {category.name}
+                  </h3>
+                   
+                </div>
+
+                {/* Bottom Indicator Line */}
+                <div className="mt-2 w-0 h-1 bg-primary rounded-full transition-all duration-300 group-hover:w-12" />
               </Link>
             ))}
       </div>
-    </div>
+    </section>
   );
 }

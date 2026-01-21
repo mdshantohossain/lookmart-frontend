@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useAppSelector } from "@/features/hooks";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
-import { WishlistType } from "@/types";
+import { ProductType } from "@/types";
 import Link from "next/link";
 
 export default function WishlistPage() {
@@ -16,15 +16,13 @@ export default function WishlistPage() {
   const { isExistsOnCart, addToCart } = useCart();
   const { removeWishlist } = useWishlist();
 
-  const handleAddToCart = (product: WishlistType) => {
+  const handleAddToCart = (product: ProductType) => {
     addToCart({
-      product_id: product.product_id,
+      product_id: product.id,
       name: product.name,
-      price: product.price,
-      image: product.image,
-      color: product.color,
-      size: product.size,
-      variant_id: product.variant_id,
+      price: product.selling_price,
+      quantity: 1,
+      image: product.image_thumbnail,
       slug: product.slug,
     });
   };
@@ -82,7 +80,7 @@ export default function WishlistPage() {
                       <div className="w-16 h-16 relative">
                         <Link href={`/products/${item.slug}`}>
                           <Image
-                            src={item.image}
+                            src={item.image_thumbnail}
                             fill
                             className="object-cover rounded-md"
                             alt={item.name}
@@ -95,7 +93,7 @@ export default function WishlistPage() {
                       </Link>
                     </div>
                     <div className="col-span-2 font-semibold">
-                      ${item.price.toFixed(2)}
+                      ${item.selling_price.toFixed(2)}
                     </div>
 
                     <div className="col-span-2">
@@ -111,11 +109,11 @@ export default function WishlistPage() {
                     <div className="col-span-2">
                       <Button
                         onClick={() => handleAddToCart(item)}
-                        disabled={isExistsOnCart(item.product_id)}
+                        disabled={isExistsOnCart(item.id)}
                         className="w-full bg-red-500 hover:bg-red-600 text-white"
                       >
                         <ShoppingCart className="h-4 w-4 mr-2" />
-                        {isExistsOnCart(item.product_id)
+                        {isExistsOnCart(item.id)
                           ? "Added to cart"
                           : "Add To Cart"}
                       </Button>
@@ -144,7 +142,7 @@ export default function WishlistPage() {
                       <div className="w-20 h-20 flex-shrink-0 relative">
                         <Link href={`/product/${item.slug}`}>
                           <Image
-                            src={item.image}
+                            src={item.image_thumbnail}
                             fill
                             className="object-cover rounded-md"
                             alt={item.name}
@@ -170,7 +168,7 @@ export default function WishlistPage() {
                           </Button>
                         </div>
                         <p className="font-semibold text-lg mb-2">
-                          ${item.price.toFixed(2)}
+                          ${item.selling_price.toFixed(2)}
                         </p>
                         <div className="flex items-center justify-between">
                           <Badge
@@ -184,11 +182,11 @@ export default function WishlistPage() {
                     </div>
                     <Button
                       onClick={() => handleAddToCart(item)}
-                      disabled={isExistsOnCart(item.product_id)}
+                      disabled={isExistsOnCart(item.id)}
                       className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white"
                     >
                       <ShoppingCart className="h-4 w-4 mr-2" />
-                      {isExistsOnCart(item.product_id)
+                      {isExistsOnCart(item.id)
                         ? "Added To Cart"
                         : "Add To Cart"}
                     </Button>

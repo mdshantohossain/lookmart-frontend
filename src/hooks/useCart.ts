@@ -1,16 +1,21 @@
 import {
   addCartItem,
-  updateCart,
+  updateCartItem,
   removeCartItem as removeItem,
+  updateQuantity,
 } from "@/features/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
-import { CartItemType } from "@/types";
+import {
+  CartItemType,
+  ProcessedVariantKeyType,
+  UpdatedVariantKeyType,
+} from "@/types";
 import { toast } from "react-toastify";
 
 export const useCart = () => {
   const dispatch = useAppDispatch();
 
-  const { items } = useAppSelector((state) => state.cart);
+  const { items, cartTotal } = useAppSelector((state) => state.cart);
 
   const isExistsOnCart = (product_id: number) => {
     return items.some((item) => item.product_id === product_id);
@@ -24,12 +29,11 @@ export const useCart = () => {
     toast.success("Product added to cart");
   };
 
-  const updateCartItem = (values: {
+  const updateItemQuantity = (values: {
     product_id: number;
-    price: number;
     quantity: number;
   }) => {
-    dispatch(updateCart(values));
+    dispatch(updateQuantity(values));
   };
 
   const removeCartItem = (id: string) => {
@@ -37,5 +41,25 @@ export const useCart = () => {
     toast.success("Product removed from cart");
   };
 
-  return { items, isExistsOnCart, addToCart, removeCartItem, updateCartItem };
+  // Inside your cart store/hook:
+  const updateCartItemVariant = ({
+    id,
+    newVariant,
+  }: {
+    id: string;
+    newVariant: UpdatedVariantKeyType;
+  }) => {
+    console.log(newVariant);
+    dispatch(updateCartItem({ id, newVariant }));
+  };
+
+  return {
+    items,
+    cartTotal,
+    isExistsOnCart,
+    addToCart,
+    removeCartItem,
+    updateItemQuantity,
+    updateCartItemVariant,
+  };
 };

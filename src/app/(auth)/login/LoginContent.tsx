@@ -5,7 +5,7 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { loginSuccess } from "@/features/authSlice";
 import { useAppDispatch } from "@/features/hooks";
-import { loginUserMutation } from "@/lib/auth";
+import { loginUserMutation } from "@/hooks/api/useAuth";
 import { LoginValuesType } from "@/types";
 import { loginValidationSchema } from "@/utils/validationSchema";
 import { Checkbox } from "@radix-ui/react-checkbox";
@@ -24,7 +24,7 @@ export default function LoginContent({
   fromModal?: boolean;
 }) {
   const [credentialError, setCredentialError] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // hooks
@@ -34,18 +34,21 @@ export default function LoginContent({
 
   const handleSubmit = (
     values: LoginValuesType,
-    { resetForm }: { resetForm: () => void }
+    { resetForm }: { resetForm: () => void },
   ) => {
     loginMutation.mutateAsync(values, {
       onSuccess: (res) => {
         setCredentialError(undefined);
         if (res.success) {
           dispatch(
-            loginSuccess({ user: res.data.user, token: res.data.token })
+            loginSuccess({ user: res.data.user, token: res.data.token, addresses: res.data.user.addresses }),
           );
           resetForm();
           toast.success(res.message);
-         return router.replace("/");
+          if (fromModal) {
+          } else {
+            return router.replace("/");
+          }
         }
       },
       onError: (error) => {
@@ -55,11 +58,9 @@ export default function LoginContent({
 
         const status = axiosError.response?.status;
 
-        if (status === 422 || status === 400) {
-          setCredentialError(axiosError.response?.data.message);
-        } else {
-          setCredentialError("Login failed. Please try again.");
-        }
+        status === 422 || status === 400
+          ? setCredentialError(axiosError.response?.data.message)
+          : setCredentialError("Login failed. Please try again.");
       },
     });
   };
@@ -82,8 +83,7 @@ export default function LoginContent({
         <Formik
           initialValues={{ email: "", password: "" } as LoginValuesType}
           validationSchema={loginValidationSchema}
-          onSubmit={handleSubmit}
-        >
+          onSubmit={handleSubmit}>
           {({
             values,
             errors,
@@ -132,8 +132,7 @@ export default function LoginContent({
                 </div>
                 <Link
                   href="/forgot-password"
-                  className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
-                >
+                  className="text-sm text-gray-600 hover:text-gray-900 hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -141,8 +140,7 @@ export default function LoginContent({
               <Button
                 type="submit"
                 disabled={loginMutation.isPending}
-                className="w-full bg-red-500 hover:bg-red-600 text-white"
-              >
+                className="w-full bg-red-500 hover:bg-red-600 text-white">
                 {loginMutation.isPending ? "Logging in..." : "Login"}
               </Button>
             </form>
@@ -164,8 +162,7 @@ export default function LoginContent({
           {"Don't Have an Account? "}
           <span
             onClick={onPressSignUp}
-            className="text-blue-600 hover:text-blue-800 cursor-pointer hover:underline"
-          >
+            className="text-blue-600 hover:text-blue-800 cursor-pointer hover:underline">
             Sign up
           </span>
         </div>

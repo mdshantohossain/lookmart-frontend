@@ -1,4 +1,5 @@
 import { API_URL } from "@/config/api";
+import api from "@/config/axios-config";
 import {
   LoginValuesType,
   RegisterValuesType,
@@ -15,12 +16,27 @@ export function loginUserMutation() {
       const response = await axios.post(`${API_URL}/auth/login`, data, {
         headers: {
           "Content-Type": "application/json",
-        }
+        },
       });
       return response.data;
     },
   });
 }
+
+// auth logout
+export const logoutMutation = () => {
+  return useMutation({
+    mutationKey: ["logout"],
+    mutationFn: async (token: string) => {
+      const response = await api.post(`${API_URL}/auth/logout`, null, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    },
+  });
+};
 
 // register
 export function registerUserMutation() {
@@ -30,10 +46,10 @@ export function registerUserMutation() {
       const response = await axios.post(`${API_URL}/auth/register`, data, {
         headers: {
           "Content-Type": "application/json",
-        } 
+        },
       });
       return response.data;
-    }
+    },
   });
 }
 
@@ -48,7 +64,7 @@ export function useVerifyEmail(token: string) {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
       return response.data;
     },
@@ -64,11 +80,10 @@ export function useResendVerificationEmail() {
     mutationKey: ["resendVerificationEmail"],
     mutationFn: async (token: string) => {
       const response = await axios.get(
-        `${API_URL}/auth/resend-verification-email?token=${token}`
+        `${API_URL}/auth/resend-verification-email?token=${token}`,
       );
       return response.data;
     },
-    
   });
 }
 
@@ -77,7 +92,9 @@ export function forgotPasswordMutation() {
   return useMutation({
     mutationKey: ["forgotPassword"],
     mutationFn: async (data: ResetPasswordType) => {
-      const response = await axios.get(`${API_URL}/auth/forgot-password?email=${data.email}`,);
+      const response = await axios.get(
+        `${API_URL}/auth/forgot-password?email=${data.email}`,
+      );
       return response.data;
     },
   });
@@ -87,14 +104,21 @@ export function forgotPasswordMutation() {
 export function resetPasswordMutation() {
   return useMutation({
     mutationKey: ["resetPassword"],
-    mutationFn: async (data: { password: string; confirm_password: string; token: string }) => {
-      const response = await axios.post(`${API_URL}/auth/reset-password`, data, {
-        headers: {
-          "Content-Type": "application/json",
-        }
-      }); 
+    mutationFn: async (data: {
+      password: string;
+      confirm_password: string;
+      token: string;
+    }) => {
+      const response = await axios.post(
+        `${API_URL}/auth/reset-password`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
       return response.data;
     },
   });
 }
-

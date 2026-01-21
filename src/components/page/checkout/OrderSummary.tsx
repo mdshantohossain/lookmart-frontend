@@ -1,9 +1,8 @@
 import EmptyCart from "@/components/EmptyCart";
 import { useAppSelector } from "@/features/hooks";
-import { Separator } from "@radix-ui/react-dropdown-menu";
 import React from "react";
 
-export default function CartDetail() {
+export default function OrderSummary() {
   const { cartTotal, items } = useAppSelector((state) => state.cart);
 
   return (
@@ -34,7 +33,7 @@ export default function CartDetail() {
               </div>
             ))}
 
-            <Separator />
+<hr /> 
 
             {/* Subtotal */}
             <div className="grid grid-cols-2 gap-4 py-2">
@@ -59,8 +58,6 @@ export default function CartDetail() {
                   {shippingCost === 0 ? "Free Shipping" : `$${60}`}
                 </span>
               </div> */}
-
-            <Separator />
 
             {/* Total */}
             <div className="grid grid-cols-2 gap-4 py-2">

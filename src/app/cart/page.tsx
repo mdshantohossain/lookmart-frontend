@@ -109,7 +109,7 @@ export default function CartPage() {
               <div className="mt-6 space-y-3">
                 <Button
                   onClick={() => router.push("/checkout")}
-                  className="w-full bg-red-500 hover:bg-red-600"
+                  className="w-full bg-red-500 hover:bg-red-600 hover:cursor-pointer"
                 >
                   Proceed to Checkout
                 </Button>

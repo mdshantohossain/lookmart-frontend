@@ -42,15 +42,19 @@ export default function ProductsContent() {
   const subCategory = searchParams.get("sub-category");
   const query = searchParams.get("query");
 
+  // get category product
   const { data: categoryProducts, isLoading: categoryProductsLoading } =
     useCategoryProduct({ slug: category, enabled: !!category });
 
+    // get sub-category product
   const { data: subCategoryProducts, isLoading: subCategoryProductsLoading } =
     useSubCategoryProduct({ slug: subCategory, enabled: !!subCategory });
 
+    // get search product 
   const { data: searchProducts, isLoading: searchProductsLoading } =
-    useSearchProducts({ query, enabled: !!query });
+    useSearchProducts({ query, category });
 
+    // showable products
   const products =
     categoryProducts || searchProducts || subCategoryProducts || [];
 

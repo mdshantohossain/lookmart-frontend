@@ -4,7 +4,7 @@ import FormSubmissionSuccess from "@/components/FormSubmissionSuccess";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { resetPasswordMutation } from "@/lib/auth";
+import { resetPasswordMutation } from "@/hooks/api/useAuth";
 import { resetPasswordValidation } from "@/utils/validationSchema";
 import { AxiosError } from "axios";
 import { Formik } from "formik";

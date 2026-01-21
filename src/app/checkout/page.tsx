@@ -3,219 +3,249 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CreditCard, Truck, X } from "lucide-react";
-import CartDetail from "@/components/page/checkout/CartDetail";
+import { X } from "lucide-react";
+import OrderSummary from "@/components/page/checkout/OrderSummary";
 import CheckoutAuthModal from "@/components/modals/checkout-modal/modal";
 import { useAppSelector } from "@/features/hooks";
-import { Textarea } from "@/components/ui/textarea";
+import { checkoutSchema, CheckoutValues } from "@/services/schema";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import VariantConfirmationModal from "@/components/page/checkout/VariantConfirmationModal";
 
-interface OrderItem {
-  id: string;
-  name: string;
-  quantity: number;
-  price: number;
-  total: number;
-}
+import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 
 export default function CheckoutPage() {
-  const [billingDetails, setBillingDetails] = useState({
-    firstName: "",
-    address: "",
-    phone: "",
-    email: "",
-  });
-  const [paymentMethod, setPaymentMethod] = useState("cash");
-  const [appliedCoupon, setAppliedCoupon] = useState<{
-    code: string;
-    discount: number;
-  } | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
-
-  // handle press login
-  const handleLogin = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  // handle input changes
-  const handleInputChange = (field: string, value: string) => {
-    setBillingDetails((prev) => ({ ...prev, [field]: value }));
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // States for Variant Confirmation
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [pendingValues, setPendingValues] = useState<CheckoutValues | null>(
+    null
+  );
+  const initialValues: CheckoutValues = {
+    name: "",
+    email: "",
+    phone: "",
+    country: "",
+    state: "",
+    city: "",
+    zipCode: "",
+    streetAddress: "",
   };
 
-  const handlePlaceOrder = async () => {
-    const requiredFields = ["firstName", "address", "phone", "email"];
-    const missingFields = requiredFields.filter(
-      (f) => !billingDetails[f as keyof typeof billingDetails]
-    );
-    if (missingFields.length > 0) {
-      alert(`Please fill in all required fields: ${missingFields.join(", ")}`);
-      return;
-    }
+  // submit form after check confirmation
+  const handleFinalOrder = () => {
     setIsProcessing(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      alert("Order placed successfully!");
-    } catch (error) {
-      alert("Something went wrong.");
-    } finally {
-      setIsProcessing(false);
-    }
+    console.log("FINAL ORDER SUBMITTED WITH:", pendingValues);
+    setIsConfirmModalOpen(false);
+  };
+
+  // handle form submit for user information
+  const handleSubmit = (values: CheckoutValues) => {
+    setPendingValues(values);
+    setIsConfirmModalOpen(true);
   };
 
   return (
-    <div className="bg-background">
-      <div className="container mx-auto px-4 py-8">
-      {/* 🔹 Modal Section */}
+    <div className="bg-background min-h-screen">
+      {/* 🔐 Login Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-          <div className="bg-card rounded-lg shadow-3xl w-full max-w-md p-6 relative animate-fadeIn">
-            {/* Close button */}
+          <div className="bg-card rounded-lg w-full max-w-md p-6 relative">
             <button
-              type="button"
-              onClick={closeModal}
-              className="absolute top-3 right-3 text-gray-600 cursor-pointer hover:text-red-500"
-            >
-              <X className="w-5 h-5" />
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-3 right-3 cursor-pointer hover:text-red-500">
+              <X />
             </button>
-
             <CheckoutAuthModal />
           </div>
         </div>
       )}
 
-      {/* 🔹 Checkout Page */}
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl md:text-3xl font-bold mb-8">Checkout</h1>
+      {/* 📦 Variant & Quantity Confirmation Modal */}
+      {isConfirmModalOpen && (
+        <VariantConfirmationModal
+          onClose={() => setIsConfirmModalOpen(false)}
+          onConfirm={handleFinalOrder}
+        />
+      )}
+
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl md:text-3xl font-bold mb-6">Checkout</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Column */}
-          <div className="space-y-8">
-            {/* Billing Details */}
-            <div className="bg-card border rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-6">Billing Details</h2>
+          {/* LEFT */}
 
-              {isAuthenticated ? (
-                <div className="space-y-4">
+          <div>
+            {isAuthenticated && (
+              <p className="text-gray-600 mb-5">
+                Please{" "}
+                <span
+                  onClick={() => setIsModalOpen(true)}
+                  className="text-red-500 font-semibold cursor-pointer">
+                  login
+                </span>{" "}
+                to place order.
+              </p>
+            )}
+
+            <Formik
+              initialValues={initialValues}
+              validationSchema={checkoutSchema}
+              onSubmit={handleSubmit}>
+              {({ values, setFieldValue }) => (
+                <Form className="space-y-5">
+                  {/* First Name */}
                   <div>
-                    <Label htmlFor="firstName" className="mb-2">
-                      First Name *
-                    </Label>
-                    <Input
-                      id="firstName"
-                      placeholder="First name"
-                      readOnly={true}
-                      value={user?.name}
-                      onChange={(e) =>
-                        handleInputChange("firstName", e.target.value)
-                      }
+                    <label>Full Name *</label>
+                    <Field
+                      as={Input}
+                      name="name"
+                      value={values.name}
+                      placeholder="John Doe"
+                    />
+                    <ErrorMessage
+                      name="name"
+                      component="p"
+                      className="text-red-500 text-xs"
                     />
                   </div>
+
+                  {/* Email */}
                   <div>
-                    <Label htmlFor="phone" className="mb-2">
-                      Phone *
-                    </Label>
-                    <Input
-                      id="phone"
-                      placeholder="Phone"
-                      readOnly={!user?.phone}
-                      value={user?.phone}
-                      onChange={(e) =>
-                        handleInputChange("phone", e.target.value)
-                      }
+                    <label>Email *</label>
+                    <Field
+                      as={Input}
+                      name="email"
+                      type="email"
+                      value={values.email}
+                      placeholder="email@example.com"
+                    />
+                    <ErrorMessage
+                      name="email"
+                      component="p"
+                      className="text-red-500 text-xs"
                     />
                   </div>
+
+                  {/* Phone */}
                   <div>
-                    <Label htmlFor="email" className="mb-2">
-                      Email *
-                    </Label>
-                    <Input
-                      id="email"
-                      placeholder="Email"
-                      readOnly={true}
-                      value={user?.email}
-                      onChange={(e) =>
-                        handleInputChange("email", e.target.value)
-                      }
+                    <label>Phone *</label>
+                    <PhoneInput
+                      international
+                      defaultCountry="US"
+                      value={values.phone}
+                      onChange={(v) => setFieldValue("phone", v)}
+                      className="border rounded-md px-3 py-2 w-full"
+                      placeholder="Enter phone number"
+                    />
+                    <ErrorMessage
+                      name="phone"
+                      component="p"
+                      className="text-red-500 text-xs"
                     />
                   </div>
+
+                  {/* Country */}
                   <div>
-                    <Label htmlFor="address" className="mb-2">
-                      Delivery Address *
-                    </Label>
-                    <Textarea
-                      id="address"
-                      placeholder="Address"
-                      value={billingDetails.address}
-                      onChange={(e) =>
-                        handleInputChange("address", e.target.value)
-                      }
+                    <label>Country *</label>
+                    <CountryDropdown
+                      value={values.country}
+                      onChange={(val) => {
+                        setFieldValue("country", val);
+                        setFieldValue("state", "");
+                      }}
+                      className="w-full border rounded-md px-3 py-2 bg-background text-foreground"
+                    />
+                    <ErrorMessage
+                      name="country"
+                      component="p"
+                      className="text-red-500 text-xs"
                     />
                   </div>
-                </div>
-              ) : (
-                <div className="flex flex-row gap-1">
-                  <span className="text-gray-600">
-                    Please log in to place an order.
-                  </span>
-                  <span
-                    className="text-red-500 font-bold cursor-pointer hover:underline"
-                    onClick={handleLogin}
-                  >
-                    Login
-                  </span>
-                </div>
+
+                  {/* State */}
+                  <div>
+                    <label>State *</label>
+                    <RegionDropdown
+                      country={values.country}
+                      value={values.state}
+                      onChange={(val) => setFieldValue("state", val)}
+                      className="w-full border rounded-md px-3 py-2 bg-background text-foreground"
+                    />
+                    <ErrorMessage
+                      name="state"
+                      component="p"
+                      className="text-red-500 text-xs"
+                    />
+                  </div>
+
+                  {/* City */}
+                  <div>
+                    <label>City *</label>
+                    <Field
+                      as={Input}
+                      name="city"
+                      value={values.city}
+                      placeholder="New York"
+                    />
+                    <ErrorMessage
+                      name="city"
+                      component="p"
+                      className="text-red-500 text-xs"
+                    />
+                  </div>
+
+                  {/* ZIP */}
+                  <div>
+                    <label>ZIP *</label>
+                    <Field
+                      as={Input}
+                      type="number"
+                      name="zipCode"
+                      value={values.zipCode}
+                      placeholder="12345"
+                    />
+                    <ErrorMessage
+                      name="zipCode"
+                      component="p"
+                      className="text-red-500 text-xs"
+                    />
+                  </div>
+
+                  {/* Address */}
+                  <div>
+                    <label>Street Address *</label>
+                    <Field
+                      as={Input}
+                      name="streetAddress"
+                      value={values.streetAddress}
+                      placeholder="123 Main St"
+                    />
+                    <ErrorMessage
+                      name="streetAddress"
+                      component="p"
+                      className="text-red-500 text-xs"
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isProcessing}
+                    className="w-full bg-red-500 text-white hover:bg-red-600 transition-colors">
+                    {isProcessing ? "Processing..." : "Place Order"}
+                  </Button>
+                </Form>
               )}
-            </div>
-
-            {/* Payment Method */}
-            <div className="bg-card border rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-6">Payment</h2>
-              <RadioGroup
-                value={paymentMethod}
-                onValueChange={setPaymentMethod}
-                className="space-y-4"
-              >
-                <div className="flex items-center space-x-3">
-                  <RadioGroupItem value="cash" id="cash" />
-                  <Label
-                    htmlFor="cash"
-                    className="flex items-center space-x-2 cursor-pointer"
-                  >
-                    <Truck className="w-4 h-4" />
-                    <span>Cash On Delivery</span>
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <RadioGroupItem value="online" id="online" />
-                  <Label
-                    htmlFor="online"
-                    className="flex items-center space-x-2 cursor-pointer"
-                  >
-                    <CreditCard className="w-4 h-4" />
-                    <span>Online Payment</span>
-                  </Label>
-                </div>
-              </RadioGroup>
-            </div>
-
-            {/* Place Order */}
-            <Button
-              onClick={handlePlaceOrder}
-              disabled={isProcessing}
-              className="w-full bg-red-500 hover:bg-red-600 text-white py-3 text-lg font-semibold"
-            >
-              {isProcessing ? "Processing..." : "Place Order"}
-            </Button>
+            </Formik>
           </div>
 
-          {/* Right Column - Order Summary */}
-          <CartDetail />
+          {/* RIGHT */}
+          <OrderSummary />
         </div>
       </div>
-    </div>
     </div>
   );
 }

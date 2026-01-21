@@ -9,7 +9,7 @@ import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "@/features/authSlice";
 import { FACEBOOK_CLIENT_ID } from "@/config/api";
-import { useSocialLoginMutation } from "@/hooks/api/socialLogin";
+import { useSocialLoginMutation } from "@/hooks/api/useSocialLogin";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { ReactFacebookFailureResponse, ReactFacebookLoginInfo } from "react-facebook-login";

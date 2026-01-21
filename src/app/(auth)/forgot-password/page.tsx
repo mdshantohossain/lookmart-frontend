@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { forgotPasswordMutation } from "@/lib/auth";
+import { forgotPasswordMutation } from "@/hooks/api/useAuth";
 import FormSubmissionSuccess from "@/components/FormSubmissionSuccess";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";

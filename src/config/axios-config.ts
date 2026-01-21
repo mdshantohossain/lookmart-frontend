@@ -2,19 +2,14 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { API_URL } from "@/config/api";
 
-const token = Cookies.get("auth_token");
-
-console.log("axios set upped...");
-
 // create axios request wiht token
 const api = axios.create({
   baseURL: API_URL,
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
 });
 
 api.interceptors.request.use((config) => {
+  const token = Cookies.get("auth_token");
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -31,8 +26,10 @@ api.interceptors.response.use(
       try {
         const { data } = await axios.post(
           API_URL + "/auth/refresh-token",
-          {},
-          { withCredentials: true }
+          null,
+          {
+            withCredentials: true,
+          },
         );
 
         Cookies.set("auth_token", data.token, { expires: 7 });
@@ -44,7 +41,7 @@ api.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

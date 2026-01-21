@@ -1,3 +1,23 @@
+export type AddressType = {
+  id: number;
+  user_id: number;
+  type: string;
+  phone: string;
+  street_address: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  is_default: boolean;
+}
+
+export type UpdatedVariantKeyType = {
+  vid: string;
+  variant_id: number;
+  variant_key: string;
+  variant_sku: string;
+  price: number;
+}
+
 export type DeliveryInfo = {
   date: string;         // YYYY-MM-DD
   dayOfWeek: string;    // Monday, Tuesday, etc.
@@ -30,7 +50,7 @@ export type ResetPasswordType = {
 
 export interface ProcessedVariantKeyType {
   id: number;
-  vid: string | null;
+  vid: string ;
   variant_key: string;
   variant_sku: string;
   selling_price: string;
@@ -46,7 +66,7 @@ export interface ProcessedVariantType {
 
 // cart product type
 export type CartItemType = {
-  id?: string;
+  id: string;
   product_id: number;
   name: string;
   price: number;
@@ -140,4 +160,12 @@ export type ProductType = {
   variants: VariantType[];
   policies: PolicyType[];
   created_at: string;
+};
+
+
+// checkout types
+export type SelectedVariantType = {
+  image: string;
+  sizes: { [size: string]: ProcessedVariantKeyType };
+  default: ProcessedVariantKeyType | null;
 };

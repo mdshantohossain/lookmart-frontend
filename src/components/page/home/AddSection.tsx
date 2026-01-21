@@ -1,3 +1,4 @@
+import images from '@/utils/images'
 import Image from 'next/image'
 import React from 'react'
 
@@ -17,9 +18,9 @@ export default function AddSection() {
               View Collection
             </button>
           </div>
-          <div className="w-20 h-20 sm:w-28 sm:h-28 ">
+          <div className="relative w-20 h-20 sm:w-28 sm:h-28 ">
             <Image
-              src="/modern-wireless-headphones-pink.png"
+              src={images.emptyImage}
               alt="Headphones"
               fill
               className="object-contain"
@@ -40,9 +41,9 @@ export default function AddSection() {
               Show Now
             </button>
           </div>
-          <div className="w-20 h-20 sm:w-28 sm:h-28  relative flex-shrink-0">
+          <div className="relative w-20 h-20 sm:w-28 sm:h-28  relative flex-shrink-0">
             <Image
-              src="/security-camera-black-modern.png"
+              src={images.emptyImage}
               alt="Camera"
               fill
               className="object-contain"
@@ -63,9 +64,9 @@ export default function AddSection() {
               View Collection
             </button>
           </div>
-          <div className="w-20 h-20 sm:w-28 sm:h-28  relative flex-shrink-0">
+          <div className="relative w-20 h-20 sm:w-28 sm:h-28  relative flex-shrink-0">
             <Image
-              src="/luxury-wristwatch-brown-leather-strap.png"
+              src={images.emptyImage}
               alt="Watch"
               fill
               className="object-contain"

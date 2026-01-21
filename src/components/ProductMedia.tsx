@@ -37,6 +37,7 @@ const ProductMedia = ({ product }: { product: ProductType }) => {
           "object-cover transition-scale duration-400",
           !hasVideo && isHovered ? "scale-110" : "scale-100"
         )}
+        priority
       />
 
       {/* Hover Video (Optional) */}

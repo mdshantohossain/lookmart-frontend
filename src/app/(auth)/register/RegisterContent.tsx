@@ -8,7 +8,7 @@ import { Formik } from "formik";
 import { RegisterValuesType } from "@/types";
 import { registrationValidationSchema } from "@/utils/validationSchema";
 import ErrorMessage from "@/components/ErrorMessage";
-import { registerUserMutation } from "@/lib/auth";
+import { registerUserMutation } from "@/hooks/api/useAuth";
 import FormSubmissionSuccess from "@/components/FormSubmissionSuccess";
 import { useRouter } from "next/navigation";
 

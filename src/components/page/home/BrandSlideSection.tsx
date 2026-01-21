@@ -246,7 +246,7 @@ export default function BrandSlideSection() {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={brand.logo || "/placeholder.svg"}
+                  src={brand.logo}
                   alt={brand.name}
                   className="max-h-full max-w-full object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0 pointer-events-none"
                   draggable={false}

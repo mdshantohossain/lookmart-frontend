@@ -18,11 +18,11 @@ export const useWishlist = () => {
   };
 
   const addWishlist = (product: ProductType) => {
-    if(!isAuthenticated) {
+    if (!isAuthenticated) {
       return router.push("/login");
     }
-    
-    if(isExistsOnWishlist(product.id)) return; // return if exists
+
+    if (isExistsOnWishlist(product.id)) return; // return if exists
 
     // add to wishlist
     dispatch(addWishlistItem(product));
@@ -30,9 +30,10 @@ export const useWishlist = () => {
     toast.success("Product added to wishlist");
   };
 
-  const removeWishlist = (id: string) => {
-    if(id === 'all') {
-    removeWishlistItem(id)
+  const removeWishlist = (id: number) => {
+    if (typeof id === 'string' &&  id === 'all') {
+      removeWishlistItem(id);
+      return;
     }
 
     removeWishlistItem(id)

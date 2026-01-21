@@ -3,19 +3,15 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
-
-// Example Categories - Replace with your actual data source or API
-const CATEGORIES = [
-  { id: "all", name: "All Categories" },
-  { id: "electronics", name: "Electronics" },
-  { id: "fashion", name: "Fashion" },
-  { id: "home", name: "Home & Living" },
-];
+import { useCategories } from "@/hooks/api/useCategories";
 
 export default function ProductSearch() {
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("all");
+  const [category, setCategory] = useState<number|string>("all");
   const router = useRouter();
+
+
+    const { data: categories, isLoading } = useCategories();
 
   const handleSearch = () => {
     if (query.trim()) {
@@ -24,6 +20,8 @@ export default function ProductSearch() {
       );
     }
   };
+
+  if(!categories) return null;
 
   return (
     <div className="flex items-center w-full max-w-lg border border-gray-300 rounded-lg bg-background shadow-sm focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500 transition-all overflow-hidden">
@@ -35,7 +33,7 @@ export default function ProductSearch() {
           className="h-full py-2.5 pl-3 pr-8 bg-transparent text-sm text-foreground focus:outline-none cursor-pointer hover:bg-muted/50 transition-colors appearance-none"
           style={{ textAlignLast: "center" }}
         >
-          {CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <option key={cat.id} value={cat.id}>
               {cat.name}
             </option>

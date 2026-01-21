@@ -2,10 +2,11 @@
 import { Suspense } from "react";
 
 import VerifyEmailContent from "./VerifyEmailContent";
+import Loading from "@/app/loading";
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading />}>
       <VerifyEmailContent />
     </Suspense>
   );

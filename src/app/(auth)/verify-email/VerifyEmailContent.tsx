@@ -1,13 +1,13 @@
 import FormSubmissionSuccess from "@/components/FormSubmissionSuccess";
 import { Card } from "@/components/ui/card";
-import { useResendVerificationEmail, useVerifyEmail } from "@/lib/auth";
+import { useResendVerificationEmail, useVerifyEmail } from "@/hooks/api/useAuth";
 import { AxiosError } from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 
 type StatusType = "loading" | "success" | "error";
 
-export default function VerifyEmailContent() {
+const  VerifyEmailContent = () => {
   const [contentState, setContentState] = useState<{
     status: StatusType | "";
     title: string;
@@ -152,8 +152,10 @@ export default function VerifyEmailContent() {
     );
 
   return (
-    <div className="flex items-center justify-center bg-gray-50 px-4 py-10">
+    <div className="flex items-center justify-center bg-background-50 px-4 py-10">
       <Card className="w-full max-w-md">{renderContent}</Card>
     </div>
   );
 }
+
+export default memo(VerifyEmailContent);

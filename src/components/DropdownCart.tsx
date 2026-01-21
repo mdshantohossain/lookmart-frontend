@@ -35,8 +35,8 @@ export default function DropdownCart({
           <>
             {/* Cart Items */}
             <div className="space-y-4 mb-4 max-h-64 overflow-y-auto">
-              {items.map((item) => (
-                <div
+              {items.map((item) =>  (
+                  <div
                   key={item.id}
                   className="flex items-center gap-3 pb-3 border-b border-gray-100 last:border-b-0"
                 >
@@ -60,7 +60,7 @@ export default function DropdownCart({
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => removeCartItem(item.id!)}
+                        onClick={() => removeCartItem(item.id)}
                         className="w-6 h-6 text-gray-400 hover:text-red-500 flex-shrink-0 hover:cursor-pointer"
                       >
                         <X className="w-4 h-4" />
@@ -68,7 +68,7 @@ export default function DropdownCart({
                     </div>
                   </div>
                 </div>
-              ))}
+                ))}
             </div>
 
             {/* Subtotal */}

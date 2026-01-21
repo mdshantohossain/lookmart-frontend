@@ -3,14 +3,15 @@ import ExclusiveProducts from "@/components/page/home/ExclusiveProducts";
 import TrendingProducts from "@/components/page/home/TrendingProducts";
 import BrandSlideSection from "@/components/page/home/BrandSlideSection";
 import CategorySection from "@/components/page/home/CategorySection";
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@/features/hooks";
+import { useEffect, useState } from "react";
+import { useAppDispatch } from "@/features/hooks";
 import { fetchCategories } from "@/features/categorySlice";
 import { fetchProducts } from "@/features/productSlice";
 import TestimonialsSection from "@/components/page/home/TestimonialsSection";
 import Slider from "@/components/page/home/Slider";
 import { fetchAppInfo } from "@/features/appSlice";
 import AddSection from "@/components/page/home/AddSection";
+import Loading from "./loading";
 
 const images = [
   {
@@ -32,18 +33,17 @@ const images = [
 ];
 
 export default function HomePage() {
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useAppDispatch();
 
-  const { items, cartTotal } = useAppSelector(state => state.cart)
-
-  console.log(items, cartTotal)
-  
   useEffect(() => {
-    // Cookies.remove("auth_token");
     dispatch(fetchCategories());
     dispatch(fetchProducts());
     dispatch(fetchAppInfo());
+    setIsLoading(false);
   }, [dispatch]);
+
+  if(isLoading) return <Loading /> 
 
   return (
     <div className="min-h-screen bg-background">
@@ -65,4 +65,3 @@ export default function HomePage() {
     </div>
   );
 }
- 

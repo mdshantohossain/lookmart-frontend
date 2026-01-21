@@ -5,7 +5,6 @@ import { CartItemType } from "@/types";
 import { Minus, Plus, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "react-toastify";
 
@@ -17,8 +16,6 @@ export default function CartItem({
   variant: "desktop" | "mobile";
 }) {
   const { removeCartItem } = useCart();
-
-  const router = useRouter();
 
   const removeItem = (id: string) => {
     removeCartItem(id);
@@ -45,11 +42,11 @@ export default function CartItem({
           </Link>
           <div className="flex-1 min-w-0">
             <div className="flex justify-between items-start mb-2">
-              <Link className="line-clamp-3" href={`/products/${item.slug}`}>{item.name}</Link>
+              <Link className="line-clamp-3 hover:text-red-500" href={`/products/${item.slug}`}>{item.name}</Link>
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => removeItem(item.id!)}
+                onClick={() => removeItem(item.id)}
                 className="text-red-500"
               >
                 <X className="h-4 w-4" />
@@ -86,7 +83,7 @@ export default function CartItem({
                   value={item.quantity}
                   onChange={(e) =>
                     updateQuantity(
-                      item.id!,
+                      item.id,
                       Number.parseInt(e.target.value) || 1
                     )
                   }
@@ -116,12 +113,14 @@ export default function CartItem({
         <Link href={`/products/${item.slug}`}>
           <Image
             src={item.image}
-            className="w-16 h-16 object-cover rounded border flex-shrink-0"
+            width={120}
+            height={120}
+            className="object-cover rounded border flex-shrink-0"
             alt={item.name}
           />
         </Link>
         <div>
-          <Link className="line-clamp-3" href={`/products/${item.slug}`}>
+          <Link className="line-clamp-2 hover:text-red-500" href={`/products/${item.slug}`}>
             <h3 className="font-medium">{item.name}</h3>
           </Link>
         </div>

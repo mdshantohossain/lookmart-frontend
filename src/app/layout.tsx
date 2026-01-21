@@ -5,6 +5,7 @@ import Header from "@/layouts/Header";
 import Footer from "@/layouts/Footer";
 import ReduxWrapper from "@/wrapper/ReduxWrapper";
 import { ToastContainer } from "react-toastify";
+import Loading from "./loading";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +37,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-         
         <link rel="icon" href="/icon.png" sizes="32x32" />
       </head>
       <body

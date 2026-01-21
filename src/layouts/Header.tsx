@@ -32,6 +32,7 @@ export default function Header() {
 
   // hooks
   const { cartTotal, items } = useAppSelector((state) => state.cart);
+  
   const wishlist = useAppSelector((state) => state.wishlist);
   const { isPage } = useCurrentUrl();
 
