@@ -3,7 +3,7 @@ import SocialAuthentication from "@/components/SocialAuthentication";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { loginSuccess } from "@/features/authSlice";
+import { login } from "@/features/authSlice";
 import { useAppDispatch } from "@/features/hooks";
 import { loginUserMutation } from "@/hooks/api/useAuth";
 import { LoginValuesType } from "@/types";
@@ -29,19 +29,23 @@ export default function LoginContent({
 
   // hooks
   const dispatch = useAppDispatch();
-  const loginMutation = loginUserMutation();
+  const { mutateAsync, isPending } = loginUserMutation();
   const router = useRouter();
 
   const handleSubmit = (
     values: LoginValuesType,
     { resetForm }: { resetForm: () => void },
   ) => {
-    loginMutation.mutateAsync(values, {
+    mutateAsync(values, {
       onSuccess: (res) => {
         setCredentialError(undefined);
         if (res.success) {
           dispatch(
-            loginSuccess({ user: res.data.user, token: res.data.token, addresses: res.data.user.addresses }),
+            login({
+              user: res.data.user,
+              token: res.data.token,
+              addresses: res.data.user.addresses,
+            }),
           );
           resetForm();
           toast.success(res.message);
@@ -139,9 +143,9 @@ export default function LoginContent({
 
               <Button
                 type="submit"
-                disabled={loginMutation.isPending}
+                disabled={isPending}
                 className="w-full bg-red-500 hover:bg-red-600 text-white">
-                {loginMutation.isPending ? "Logging in..." : "Login"}
+                {isPending ? "Logging in..." : "Login"}
               </Button>
             </form>
           )}

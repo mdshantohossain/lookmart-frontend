@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { useCategories } from "@/hooks/api/useCategories";
+import { getCategories } from "@/hooks/api/get-categories";
 import Link from "next/link";
 import useCurrentUrl from "@/hooks/useCurrentUrl";
 import CategoryDropdownProduct from "./CategoryDropdownProduct";
@@ -30,7 +30,7 @@ export function CategoryDropdown() {
   const desktopDropdownRef = useRef<HTMLDivElement>(null);
 
   // hooks
-  const { data: categories, isLoading } = useCategories();
+  const { data: categories, isLoading } = getCategories();
   const { isSubCategoryActive, isCategoryActive } = useCurrentUrl();
 
   useEffect(() => {

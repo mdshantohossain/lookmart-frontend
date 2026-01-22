@@ -1,4 +1,4 @@
-import { API_URL } from "@/config/api";
+import { API_URL } from "@/config/env";
 import { CategoryType, ProductType, SubCategoryType } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -6,9 +6,9 @@ import axios from "axios";
 type CategoryWithRelations = CategoryType & {
   sub_categories: SubCategoryType[];
   products: ProductType[];
-};  
+};
 
-export const useCategories = () => {
+export const getCategories = () => {
   return useQuery<CategoryWithRelations[]>({
     queryKey: ["categories"],
     queryFn: async () => {

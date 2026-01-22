@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
-import { useCategories } from "@/hooks/api/useCategories";
+import { useCategories } from "@/hooks/api/get-categories";
 import { CategoryType } from "@/types";
 import React, { useEffect, useState } from "react";
 

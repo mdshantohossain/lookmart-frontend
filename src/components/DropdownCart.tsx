@@ -85,13 +85,13 @@ export default function DropdownCart({
             <div className="flex flex-col sm:flex-row gap-2 mt-4">
               <Button
                 variant="outline"
-                className="flex-1 text-sm py-2 border-gray-800 text-foreground hover:bg-gray-800 hover:text-white bg-transparent"
+                className="flex-1 text-sm py-2 border-gray-800 text-foreground hover:bg-gray-800 hover:text-white bg-transparent hover:cursor-pointer"
                 onClick={() => handleNavigation("/cart")}
               >
                 View Cart
               </Button>
               <Button
-                className="flex-1 text-sm py-2 bg-red-500 hover:bg-red-600 text-white"
+                className="flex-1 text-sm py-2 bg-red-500 hover:bg-red-600 text-white hover:cursor-pointer"
                 onClick={() => handleNavigation("/checkout")}
               >
                 Checkout

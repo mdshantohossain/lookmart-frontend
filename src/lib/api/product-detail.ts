@@ -1,4 +1,4 @@
-import { API_URL } from "@/config/api";
+import { API_URL } from "@/config/env";
 import { ProductType } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";

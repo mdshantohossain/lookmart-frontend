@@ -1,8 +1,8 @@
-import { API_URL } from "@/config/api";
+import { API_URL } from "@/config/env";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export default function useTrendingProducts() {
+export default function getTrendingProducts() {
   return useQuery({
     queryKey: ["trending-products"],
     queryFn: async () => {

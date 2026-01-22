@@ -1,4 +1,4 @@
-import { API_URL } from "@/config/api";
+import { API_URL } from "@/config/env";
 import api from "@/config/axios-config";
 import { AddressType } from "@/types";
 import { useMutation } from "@tanstack/react-query";
@@ -29,8 +29,6 @@ export const useUpdateAddressMutaion = () => {
           "Content-Type": "application/json",
         },
       });
-
-      console.log(res.data);
 
       return res.data;
     },

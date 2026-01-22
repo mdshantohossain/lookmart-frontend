@@ -16,6 +16,7 @@ import VariantConfirmationModal from "@/components/page/checkout/VariantConfirma
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 
 export default function CheckoutPage() {
+
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // States for Variant Confirmation
@@ -234,7 +235,7 @@ export default function CheckoutPage() {
                   <Button
                     type="submit"
                     disabled={isProcessing}
-                    className="w-full bg-red-500 text-white hover:bg-red-600 transition-colors">
+                    className="w-full bg-red-500 text-white hover:bg-red-600 transition-colors hover:cursor-grab">
                     {isProcessing ? "Processing..." : "Place Order"}
                   </Button>
                 </Form>

@@ -7,8 +7,8 @@ import images from "@/utils/images";
 import { useGoogleLogin } from "@react-oauth/google";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "@/features/authSlice";
-import { FACEBOOK_CLIENT_ID } from "@/config/api";
+import { login } from "@/features/authSlice";
+import { FACEBOOK_CLIENT_ID } from "@/config/env";
 import { useSocialLoginMutation } from "@/hooks/api/useSocialLogin";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -16,19 +16,19 @@ import { ReactFacebookFailureResponse, ReactFacebookLoginInfo } from "react-face
 
 export default function SocialAuthentication() {
   const dispatch = useDispatch();
-  const socialLoginMutation = useSocialLoginMutation();
+  const { mutateAsync: socialLoginMutation} = useSocialLoginMutation();
   const router = useRouter();
 
   // Google login handler
   const loginWithGoogle = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      socialLoginMutation.mutate(
+      socialLoginMutation(
         { provider: "google", token: tokenResponse.access_token },
         {
           onSuccess: (res) => {
             if (res.success) {
               dispatch(
-                loginSuccess({ user: res.data.user, token: res.data.token })
+                login({ user: res.data.user, token: res.data.token, addresses: res.data.user.addresses })
               );
               toast.success("Login successful.");
               router.replace("/");
@@ -45,13 +45,13 @@ export default function SocialAuthentication() {
 ): Promise<void> => {
   if("accessToken" in userInfo) {
     const accessToken = userInfo.accessToken;
-    socialLoginMutation.mutate(
+    socialLoginMutation(
       { provider: "facebook", token: accessToken },
       {
         onSuccess: (res) => {
           if (res.success) {
             dispatch(
-              loginSuccess({ user: res.data.user, token: res.data.token })
+              login({ user: res.data.user, token: res.data.token, addresses: res.data.user.addresses })
             );
             toast.success("Login successful.");
 
@@ -61,10 +61,7 @@ export default function SocialAuthentication() {
         onError: (err) => console.error("Facebook login failed:", err),
       }
     );
-  } else {
-
-  }
-
+  } 
 }
 
   return (

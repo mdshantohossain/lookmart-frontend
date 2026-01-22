@@ -1,4 +1,4 @@
-import { API_URL } from "@/config/api";
+import { API_URL } from "@/config/env";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosHeaders } from "axios";
 
@@ -24,7 +24,7 @@ export const useCreateWishlist = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       console.log(data);

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
-import { useCategories } from "@/hooks/api/useCategories";
+import { getCategories } from "@/hooks/api/get-categories";
 
 export default function ProductSearch() {
   const [query, setQuery] = useState("");
@@ -11,7 +11,7 @@ export default function ProductSearch() {
   const router = useRouter();
 
 
-    const { data: categories, isLoading } = useCategories();
+    const { data: categories, isLoading } = getCategories();
 
   const handleSearch = () => {
     if (query.trim()) {

@@ -1,9 +1,10 @@
-import { API_URL } from "@/config/api";
+import { API_URL } from "@/config/env";
 import api from "@/config/axios-config";
 import {
   LoginValuesType,
   RegisterValuesType,
   ResetPasswordType,
+  UpdatePasswordType,
 } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -122,3 +123,36 @@ export function resetPasswordMutation() {
     },
   });
 }
+
+// update password
+export const usePasswordUpdateMutation = () => {
+  return useMutation({
+    mutationKey: ["update-password"],
+    mutationFn: async (data: UpdatePasswordType) => {
+      const response = await api.post(`${API_URL}/update-password`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    },
+  });
+};
+
+export const useProfileUpdateMutation = () => {
+  return useMutation({
+    mutationKey: ["update-profile"],
+    mutationFn: async (data: {
+      user_id: number;
+      name: string;
+      phone: string;
+    }) => {
+      const response = await api.post(`${API_URL}/update-profile`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    },
+  });
+};

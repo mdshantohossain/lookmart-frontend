@@ -1,3 +1,15 @@
+export interface AxiosErrorResponse {
+ success: boolean;
+  message?: string;
+  errors?: Record<string, string[]>;
+}
+
+export type UpdatePasswordType = {
+  current_password: string;
+  password: string;
+  confirmation_password: string;
+}
+
 export type AddressType = {
   id: number;
   user_id: number;
@@ -85,6 +97,7 @@ export type CategoryType = {
   id: number;
   name: string;
   image: string;
+  products_count: number;
   slug: string;
 };
 
@@ -94,7 +107,9 @@ export type CategoryType = {
   email: string;
   phone: string;
   role: string;
-  profile_photo?: string
+  profile_photo?: string;
+  orders_count: number;
+  status: number;
 }
 
 export type ReviewType = {
