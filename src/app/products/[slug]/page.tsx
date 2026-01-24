@@ -7,14 +7,14 @@ import { generateMetadata } from "./metadata";
 // exported dynamically metadata
 export { generateMetadata };
 
-type PageProps = {
+export default async function ProductDetailPage({
+  params,
+}: {
   params: {
     slug: string;
   };
-};
-
-export default async function ProductDetailPage({ params }: PageProps) {
-  const { slug } = await params;
+}) {
+  const { slug } = params;
 
   // if slug not found
   if (!slug) return notFound();

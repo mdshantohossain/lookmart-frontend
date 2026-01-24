@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
-import { useCategories } from "@/hooks/api/get-categories";
+import { getCategories } from "@/hooks/api/get-categories";
 import { CategoryType } from "@/types";
 import React, { useEffect, useState } from "react";
 
@@ -30,7 +30,8 @@ export default function FilterSidebar({
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-  const { data: categories, isLoading: categoriesLoading } = useCategories();
+  
+  const { data: categories, isLoading: categoriesLoading } = getCategories();
 
   useEffect(() => {
     if (onCategoryChange) onCategoryChange(selectedCategories);

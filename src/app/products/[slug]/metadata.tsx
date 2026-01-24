@@ -1,13 +1,13 @@
+import type { Metadata } from "next";
 import { APP_URL } from "@/config/env";
 import { getProductDetail } from "@/lib/api/product-detail";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const { slug } = await params;
-  const { product } = await getProductDetail(slug as string);
+export async function generateMetadata(
+  { params }: { params: { slug: string } }
+): Promise<Metadata | undefined> {
+  const { slug } = params;
+
+  const { product } = await getProductDetail(slug);
   if (!product) return;
 
   return {
