@@ -95,7 +95,7 @@ export default function ProductImageGallery({
                 src={currentMedia?.src}
                 fill
                 alt={productName}
-                className="object-cover"
+                className="object-fit"
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
               />

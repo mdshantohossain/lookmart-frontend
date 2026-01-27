@@ -433,3 +433,4 @@ export default function ProductDetail({product, relatedProducts}: ProductDetailP
     </div>
   );
 }
+

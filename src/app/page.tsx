@@ -44,7 +44,7 @@ export default function HomePage() {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background">
       <div className="w-full">
         <Slider
           images={images}
@@ -52,14 +52,14 @@ export default function HomePage() {
         />
       </div>
 
-      <main className="mx-auto px-4 md:px-8 py-8">
+      <div className="mx-auto px-4 md:px-8 py-8">
         <AddSection />
         <CategorySection />
         <ExclusiveProducts />
         <TrendingProducts />
         <TestimonialsSection />
         <BrandSlideSection />
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

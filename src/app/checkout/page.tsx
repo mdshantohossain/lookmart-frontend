@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X } from "lucide-react";
+import { CreditCard, Truck, X } from "lucide-react";
 import OrderSummary from "@/components/page/checkout/OrderSummary";
-import CheckoutAuthModal from "@/components/modals/checkout-modal/modal";
+import AuthModal from "@/components/modals/auth-modal";
 import { useAppSelector } from "@/features/hooks";
 import { checkoutSchema, CheckoutValues } from "@/services/schema";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -14,9 +14,11 @@ import "react-phone-number-input/style.css";
 import VariantConfirmationModal from "@/components/page/checkout/VariantConfirmationModal";
 
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function CheckoutPage() {
-
+  const [paymentMethod, setPaymentMethod] = useState<"cash" | "online">("online");
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // States for Variant Confirmation
@@ -60,7 +62,7 @@ export default function CheckoutPage() {
               className="absolute top-3 right-3 cursor-pointer hover:text-red-500">
               <X />
             </button>
-            <CheckoutAuthModal />
+            <AuthModal />
           </div>
         </div>
       )}
@@ -231,6 +233,37 @@ export default function CheckoutPage() {
                       className="text-red-500 text-xs"
                     />
                   </div>
+
+                  {/* Payment Method */}
+            <div className="bg-card border rounded-lg p-6">
+              <h2 className="text-xl font-semibold mb-6">Payment</h2>
+              <RadioGroup
+                value={paymentMethod}
+                // onValueChange={setPaymentMethod}
+                className="space-y-4"
+              >
+                <div className="flex items-center space-x-3">
+                  <RadioGroupItem value="cash" id="cash" />
+                  <Label
+                    htmlFor="cash"
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
+                    <Truck className="w-4 h-4" />
+                    <span>Cash On Delivery</span>
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <RadioGroupItem value="online" id="online" />
+                  <Label
+                    htmlFor="online"
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
+                    <CreditCard className="w-4 h-4" />
+                    <span>Online Payment</span>
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
 
                   <Button
                     type="submit"

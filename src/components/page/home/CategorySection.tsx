@@ -1,11 +1,10 @@
-import TopCategorySkeleton from "@/components/skeleton/TopCategorySkeleton";
+import HomeCategorySkeleton from "@/components/skeleton/HomeCategorySkeleton";
 import { getCategories } from "@/hooks/api/get-categories";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function CategorySection() {
-  const { data: categories = [], isLoading } =
-    getCategories();
+  const { data: categories = [], isLoading } = getCategories();
 
   if (!isLoading && categories.length === 0) return null;
 
@@ -27,15 +26,12 @@ export default function CategorySection() {
         {isLoading
           ? Array.from({ length: 6 }, (_, i) => (
               <div key={i} className="w-[140px] md:w-[170px]">
-                <TopCategorySkeleton />
+                <HomeCategorySkeleton />
               </div>
             ))
           : categories.map((category, i) => (
               <Link
-                href={{
-                  pathname: "/products",
-                  query: { category: category.slug },
-                }}
+                href={`/category/${category.slug}`}
                 key={category.slug || i}
                 className="group relative flex flex-col items-center w-[150px] md:w-[170px]">
                 {/* Image Bubble */}

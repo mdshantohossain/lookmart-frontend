@@ -1,3 +1,4 @@
+"use client"
 import Image, { StaticImageData } from "next/image";
 import React from "react";
 import { Button } from "./ui/button";
@@ -31,7 +32,7 @@ export default function EmptyContent({
 
           <h2 className="text-xl font-semibold mb-2">{title}</h2>
           <p className="text-muted-foreground mb-6">{message}</p>
-          <Button onClick={() => router.push(href || "/")}>
+          <Button onClick={() => router.push(href || "/")} className="hover:cursor-pointer">
             {buttonText || "Continue Shopping"}
           </Button>
         </div>

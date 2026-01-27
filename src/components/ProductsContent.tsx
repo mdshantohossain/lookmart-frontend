@@ -18,68 +18,33 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Product from "@/components/Product";
-import { useSearchParams } from "next/navigation";
-import useCategoryProduct from "@/hooks/api/useCategoryProduct";
-import { useSearchProducts } from "@/hooks/api/useSearchProducts";
 import FilterSidebar from "@/components/page/product/FilterSidebar";
-import Pagination from "@/components/page/product/Pagination";
-import ProductsSkeleton from "@/components/skeleton/ProductsSkeleton";
 import { ProductType } from "@/types";
 import EmptyContent from "@/components/EmptyContent";
 import EmptyProduct from "@/assets/images/search.png";
-import useSubCategoryProduct from "@/hooks/api/useSubCategoryProduct";
 
+interface Props  {
+  products: ProductType[]
+}
 
-export default function ProductsContent() {
+export default function ProductsContent({products}: Props) {
   const [sortBy, setSortBy] = useState<string>("default");
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const perPageItems: number = 4;
-  const mainRef = useRef<HTMLDivElement>(null);
-
-  // hooks
-  const searchParams = useSearchParams();
-  const category = searchParams.get("category");
-  const subCategory = searchParams.get("sub-category");
-  const query = searchParams.get("query");
-
-  // get category product
-  const { data: categoryProducts, isLoading: categoryProductsLoading } =
-    useCategoryProduct({ slug: category, enabled: !!category });
-
-    // get sub-category product
-  const { data: subCategoryProducts, isLoading: subCategoryProductsLoading } =
-    useSubCategoryProduct({ slug: subCategory, enabled: !!subCategory });
-
-    // get search product 
-  const { data: searchProducts, isLoading: searchProductsLoading } =
-    useSearchProducts({ query, category });
-
-    // showable products
-  const products =
-    categoryProducts || searchProducts || subCategoryProducts || [];
-
-  // pagination calculations
-  const totalPages = Math.ceil(products.length / perPageItems);
-  const startIndex = (currentPage - 1) * perPageItems;
-  const currentProducts = products?.slice(
-    startIndex,
-    startIndex + perPageItems
-  );
+  const mainRef = useRef<HTMLDivElement>(null); 
 
   // handle page change
-  const handlePageChange = (page: number): void => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-      mainRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  // const handlePageChange = (page: number): void => {
+  //   if (page >= 1 && page <= totalPages) {
+  //     setCurrentPage(page);
+  //     mainRef.current?.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // };
 
-  // handle category change
+  // // handle category change
   const onCategoryChange = (category: string[] | string): void => {
     console.log(category);
   };
 
-  // handle brand change
+  // // handle brand change
   const onBrandChange = (brand: string[] | string): void => {
     console.log(brand);
   };
@@ -114,15 +79,6 @@ export default function ProductsContent() {
         return products;
     }
   };
-
-  // show loading skeleton if loading
-  if (
-    categoryProductsLoading ||
-    searchProductsLoading ||
-    subCategoryProductsLoading
-  ) {
-    return <ProductsSkeleton />;
-  }
 
   const renderContent =
     products.length === 0 ? (
@@ -167,7 +123,8 @@ export default function ProductsContent() {
               </SheetContent>
             </Sheet>
             <p className="text-sm text-muted-foreground">
-              Showing {startIndex + perPageItems} of {products.length} products
+              Showing 
+              {/* {startIndex + perPageItems} of {products.length} products */}
             </p>
           </div>
           <div className="flex items-center gap-4">
@@ -190,18 +147,18 @@ export default function ProductsContent() {
         <div
           className={`grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3`}
         >
-          {currentProducts.map((product: ProductType, index: number) => (
+          {products?.map((product: ProductType, index: number) => (
             <Product key={index} product={product} />
           ))}
         </div>
 
         {/* Pagination */}
 
-        <Pagination
+        {/* <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
-        />
+        /> */}
       </>
     );
 

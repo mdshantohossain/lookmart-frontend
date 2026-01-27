@@ -4,7 +4,7 @@ import LoginContent from "@/app/(auth)/login/LoginContent";
 import RegisterContent from "@/app/(auth)/register/RegisterContent";
 import { useState } from "react";
 
-export default function CheckoutAuthModal() {
+export default function AuthModal() {
   const [modalWhich, setModalWhich] = useState("login");
 
   const handlePressOnSignUpOrSignIn = () => {

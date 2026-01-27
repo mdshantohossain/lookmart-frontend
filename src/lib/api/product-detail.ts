@@ -1,7 +1,5 @@
 import { API_URL } from "@/config/env";
 import { ProductType } from "@/types";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 
 export type ProductDetailsResponse = {
   product: ProductType;
@@ -9,6 +7,11 @@ export type ProductDetailsResponse = {
 };
 
 export const getProductDetail = async (slug: string) => {
-  const { data } = await axios.get(`${API_URL}/product-details/${slug}`);
-  return data.data;
+  const res = await fetch(`${API_URL}/product-details/${slug}`, {
+    next: {
+      revalidate: 60 * 60,
+    },
+  });
+  const { data } = await res.json();
+  return data;
 };

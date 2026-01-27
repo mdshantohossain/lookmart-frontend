@@ -98,6 +98,7 @@ export type CategoryType = {
   name: string;
   image: string;
   products_count: number;
+  sub_categories: SubCategoryType[];
   slug: string;
 };
 

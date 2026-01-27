@@ -20,7 +20,6 @@ import Image from "next/image";
 import { getCategories } from "@/hooks/api/get-categories";
 import Link from "next/link";
 import useCurrentUrl from "@/hooks/useCurrentUrl";
-import CategoryDropdownProduct from "./CategoryDropdownProduct";
 import Product from "./Product";
 
 export function CategoryDropdown() {
@@ -64,11 +63,10 @@ export function CategoryDropdown() {
   return (
     <div ref={desktopDropdownRef} className="relative">
       {/* ---------- DESKTOP DROPDOWN ---------- */}
-      <div  className="hidden md:flex">
+      <div className="hidden md:flex">
         <div
           onClick={() => setIsDesktopOpen(!isDesktopOpen)}
-          className="flex  items-center bg-red-500 rounded-md p-1 md:p-2 cursor-pointer"
-        >
+          className="flex  items-center bg-red-500 rounded-md p-1 md:p-2 cursor-pointer">
           <h3 className="text-white font-bold">All Categories</h3>
           <Menu className="h-5 w-5l text-white ms-10" />
         </div>
@@ -85,13 +83,12 @@ export function CategoryDropdown() {
 
           <div
             className="relative md:flex md:gap-0 flex-col md:flex-row rounded-lg"
-            style={{ minHeight: "auto" }}
-          >
+            style={{ minHeight: "auto" }}>
             {/* Categories List - CHANGE: Responsive height and width */}
             <div className="w-full md:w-72 border-b md:border-b-0 md:border-r border-gray-200 overflow-y-auto max-h-72 md:max-h-96">
               {categories?.map((category) => (
                 <Link
-                  href={`/products?category=${category.slug}`}
+                  href={`/category/${category.slug}`}
                   onClick={() => setIsDesktopOpen(false)}
                   key={category.id}
                   onMouseEnter={() => setHoveredCategory(category.id)}
@@ -99,9 +96,8 @@ export function CategoryDropdown() {
                     "w-full flex items-center gap-3 px-4 py-3.5 md:py-3 text-left transition-all duration-150 border-l-4 hover:cursor-pointer",
                     hoveredCategory === category.id
                       ? "bg-red-50 border-l-4 border-red-500"
-                      : "border-l-4 border-transparent hover:bg-card"
-                  )}
-                >
+                      : "border-l-4 border-transparent hover:bg-card",
+                  )}>
                   <span className="text-lg md:text-xl flex-shrink-0">
                     <Image
                       src={category.image}
@@ -116,9 +112,8 @@ export function CategoryDropdown() {
                         "font-semibold transition-colors duration-150 truncate text-sm md:text-base",
                         hoveredCategory === category.id
                           ? "text-red-600"
-                          : "text-forground"
-                      )}
-                    >
+                          : "text-forground",
+                      )}>
                       {category.name}
                     </p>
                   </div>
@@ -129,7 +124,7 @@ export function CategoryDropdown() {
                       "text-gray-400 flex-shrink-0",
                       hoveredCategory === category.id
                         ? "rotate-180 text-red-500"
-                        : ""
+                        : "",
                     )}
                   />
                 </Link>
@@ -154,9 +149,8 @@ export function CategoryDropdown() {
                     {selectedCategory.sub_categories.map((subcat) => (
                       <Link
                         key={subcat.id}
-                        href={`/products?sub-category=${subcat.slug}`}
-                        onClick={() => setIsDesktopOpen(false)}
-                      >
+                        href={`/category/${selectedCategory.slug}/${subcat.slug}`}
+                        onClick={() => setIsDesktopOpen(false)}>
                         <div className="w-full text-left px-3 py-2 md:py-2.5 hover:bg-white rounded-md transition-all duration-150 group hover:cursor-pointer">
                           <p className="font-medium group-hover:text-red-600 transition-colors duration-150 text-sm md:text-base">
                             {subcat.name}
@@ -193,21 +187,14 @@ export function CategoryDropdown() {
                           (categoryProduct, index) => (
                             <div
                               className="bg-card rounded-xl border border-red-100 hover:border-red-300 hover:shadow-lg transition-all duration-200 overflow-hidden group"
-                              key={index}
-                            >
+                              key={index}>
                               <Product
                                 product={categoryProduct}
                                 isDeviceOpen={isDesktopOpen}
                                 setIsDeviceOpen={setIsDesktopOpen}
                               />
                             </div>
-                            // <CategoryDropdownProduct
-                            //   key={index}
-                            //   product={categoryProduct}
-                            //   setIsDeviceOpen={setIsDesktopOpen}
-                            //   isDeviceOpen={isDesktopOpen}
-                            // />
-                          )
+                          ),
                         )}
                       </div>
 
@@ -247,8 +234,7 @@ export function CategoryDropdown() {
                     open
                       ? setHoveredCategory(category.id)
                       : setHoveredCategory(null)
-                  }
-                >
+                  }>
                   <CollapsibleTrigger asChild>
                     <button
                       type="button"
@@ -256,13 +242,11 @@ export function CategoryDropdown() {
                         isCategoryActive(category.slug)
                           ? "bg-red-500"
                           : "bg-card"
-                      }`}
-                    >
-                      <Link href={`/products?category=${category.slug}`}>
+                      }`}>
+                      <Link href={`/category/${category.slug}`}>
                         <div
                           className="flex items-center gap-2"
-                          onClick={() => setIsMobileOpen(false)}
-                        >
+                          onClick={() => setIsMobileOpen(false)}>
                           <Image
                             src={category.image}
                             alt={category.name}
@@ -280,7 +264,7 @@ export function CategoryDropdown() {
                           "text-gray-400 flex-shrink-0",
                           hoveredCategory === category.id
                             ? "rotate-180 text-red-500 transation-all duration-200"
-                            : ""
+                            : "",
                         )}
                       />
                     </button>
@@ -288,17 +272,15 @@ export function CategoryDropdown() {
                   <CollapsibleContent className="px-2 py-1 bg-card rounded-md border mt-1 space-y-2">
                     {category?.sub_categories.map((sub) => (
                       <Link
-                        href={`/products?sub-category=${sub.slug}`}
+                        href={`/category/${category.slug}/${sub.slug}`}
                         key={sub.id}
-                        onClick={() => setIsMobileOpen(false)}
-                      >
+                        onClick={() => setIsMobileOpen(false)}>
                         <div
                           className={`px-2 py-2 text-sm text-foreground hover:text-red-600 cursor-pointer flex justify-between items-center ${
                             isSubCategoryActive(sub.slug)
                               ? "bg-red-400"
                               : "bg-background/50"
-                          } my-1 rounded-md`}
-                        >
+                          } my-1 rounded-md`}>
                           {sub.name} <ArrowRight size={14} />
                         </div>
                       </Link>
@@ -316,8 +298,7 @@ export function CategoryDropdown() {
                           {category?.products.map((categoryProduct, index) => (
                             <div
                               key={index}
-                              className="flex-shrink-0 w-52 sm:w-65 rounded-xl border border-red-100 hover:border-red-300"
-                            >
+                              className="flex-shrink-0 w-52 sm:w-65 rounded-xl border border-red-100 hover:border-red-300">
                               <Product
                                 product={categoryProduct}
                                 isDeviceOpen={isMobileOpen}
