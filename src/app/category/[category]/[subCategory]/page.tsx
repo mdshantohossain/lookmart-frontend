@@ -11,14 +11,14 @@ import { CategoryType, SubCategoryType } from "@/types";
 // metadata 
 export { generateMetadata };
 
-export const revalidate = 60 * 2400;
+export const revalidate = 144000;
 export const dynamicParams = true;
 
 // static params
 export async function generateStaticParams() {
   const res = await fetch(`${API_URL}/categories`, {
     next: {
-      revalidate: 60 * 120,
+      revalidate: 7200,
     },
   });
   

@@ -9,9 +9,21 @@ export type ProductDetailsResponse = {
 export const getProductDetail = async (slug: string) => {
   const res = await fetch(`${API_URL}/product-details/${slug}`, {
     next: {
-      revalidate: 60 * 60,
+      revalidate: 600,
     },
   });
   const { data } = await res.json();
+
+  return data;
+};
+
+export const getRelatedProduct = async (slug: string) => {
+  const res = await fetch(`${API_URL}/related-products/${slug}`, {
+    next: {
+      revalidate: 1800,
+    },
+  });
+  const { data } = await res.json();
+  
   return data;
 };

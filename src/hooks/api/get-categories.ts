@@ -15,5 +15,6 @@ export const getCategories = () => {
       const { data } = await axios.get(API_URL + "/categories");
       return data;
     },
+    staleTime: 1000 * 60 * 10,
   });
 };

@@ -19,9 +19,11 @@ import { toast } from "react-toastify";
 export default function LoginContent({
   onPressSignUp,
   fromModal = false,
+  onCloseModal,
 }: {
   onPressSignUp: () => void;
   fromModal?: boolean;
+  onCloseModal?: () => void;
 }) {
   const [credentialError, setCredentialError] = useState<string | undefined>(
     undefined,
@@ -47,8 +49,9 @@ export default function LoginContent({
               addresses: res.data.user.addresses,
             }),
           );
-          resetForm();
+          if(onCloseModal) onCloseModal();
           toast.success(res.message);
+          resetForm();
           if (fromModal) {
           } else {
             return router.replace("/");
@@ -144,7 +147,7 @@ export default function LoginContent({
               <Button
                 type="submit"
                 disabled={isPending}
-                className="w-full bg-red-500 hover:bg-red-600 text-white">
+                className="w-full bg-red-500 hover:bg-red-600 text-white hover:cursor-grab">
                 {isPending ? "Logging in..." : "Login"}
               </Button>
             </form>

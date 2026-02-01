@@ -11,26 +11,29 @@ export async function generateMetadata({
 }): Promise<Metadata | undefined> {
   const { slug } = await params;
 
-  const { product } = await getProductDetail(slug);
+  const product = await getProductDetail(slug);
 
   if (!product) return;
 
   return {
-    title: `${product.name} | Buy Online`,
-    description: product.short_description || `Buy ${product.name} online`,
-    keywords: product.meta_keywords?.split(',') || [],
+    title: product.meta_title || product.name + `| Buy Online`,
+    description:
+      product.meta_description ||
+      product.short_description ||
+      `Buy ${product.name} online`,
+    keywords: product.meta_keywords?.split(",") || [],
     alternates: {
       canonical: `${APP_URL}/products/${product.slug}`,
     },
     openGraph: {
-      title: `${product.name} | Buy Online`,
+      title: product.meta_title || product.nam + `| Buy Online`,
       description: product.short_description,
       images: product.image_thumbnail ? [product.image_thumbnail] : [],
       url: `${APP_URL}/${product.slug}`,
     },
     twitter: {
       card: "summary_large_image",
-      title: product.name,
+      title: product.meta_title || product.name,
       description: product.short_description,
       images: product.image_thumbnail ? [product.image_thumbnail] : [],
     },

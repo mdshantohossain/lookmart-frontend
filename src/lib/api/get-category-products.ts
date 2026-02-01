@@ -3,7 +3,7 @@ import { API_URL } from "@/config/env";
 export default async function getCategoryProduct(slug: string) {
   const res = await fetch(`${API_URL}/category-products?query=${slug}`, {
     next: {
-      revalidate: 60 * 2400,
+      revalidate: 144000,
     },
   });
 

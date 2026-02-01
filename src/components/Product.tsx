@@ -83,7 +83,7 @@ export default function Product({
   };
 
   // handle checkout
-  const handleShopNow = (product: ProductType) => {
+  const handleBuyNow = (product: ProductType) => {
     isDeviceOpen && setIsDeviceOpen && setIsDeviceOpen(false);
 
     handleAddToCart(product);
@@ -121,7 +121,7 @@ export default function Product({
       <div className="px-4 pt-4 pb-6">
         <Link href={`/products/${product.slug}`}>
           <h3
-            className="text-foreground mb-1 line-clamp-4 hover:cursor-pointer"
+            className="text-foreground mb-1 line-clamp-3 hover:cursor-pointer"
             onClick={() => setIsDeviceOpen && setIsDeviceOpen(false)}>
             {product.name}
           </h3>
@@ -177,10 +177,10 @@ export default function Product({
         {/* Action Buttons */}
         <div className="flex gap-2">
           <Button
-            onClick={() => handleShopNow(product)}
+            onClick={() => handleBuyNow(product)}
             className="w-[83%] bg-red-600 hover:bg-red-500 text-white cursor-pointer"
             size="sm">
-            Shop Now
+            Buy Now
           </Button>
 
           <Button

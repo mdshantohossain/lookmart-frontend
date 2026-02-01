@@ -4,7 +4,10 @@ import LoginContent from "@/app/(auth)/login/LoginContent";
 import RegisterContent from "@/app/(auth)/register/RegisterContent";
 import { useState } from "react";
 
-export default function AuthModal() {
+interface Props {
+  onCloseModal?: () => void;
+}
+export default function AuthModal({onCloseModal}: Props) {
   const [modalWhich, setModalWhich] = useState("login");
 
   const handlePressOnSignUpOrSignIn = () => {
@@ -20,6 +23,7 @@ export default function AuthModal() {
       <LoginContent
         onPressSignUp={handlePressOnSignUpOrSignIn}
         fromModal={true}
+        onCloseModal={onCloseModal}
       />
     ) : (
       <RegisterContent

@@ -4,21 +4,37 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { useAppSelector } from "@/features/hooks";
+import { logout } from "@/features/authSlice";
+import { useAppDispatch, useAppSelector } from "@/features/hooks";
+import { useCreateReview } from "@/hooks/api/useCreateReview";
 import { ReviewType } from "@/types";
 import images from "@/utils/images";
 import { Star, X } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-export default function ProductReview({ reviews }: { reviews: ReviewType[] }) {
-  const [reviewRating, setReviewRating] = useState(0);
-  const [reviewText, setReviewText] = useState("");
+interface ProductReview {
+  message: string;
+  rating: number;
+}
+export default function ProductReview({
+  productId,
+  reviews,
+}: {
+  productId: number;
+  reviews: ReviewType[];
+}) {
+  const [review, setReview] = useState<ProductReview>({
+    message: "",
+    rating: 0,
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingSubmit, setPendingSubmit] = useState(false);
 
   // hooks
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { mutateAsync, isPending } = useCreateReview();
 
   useEffect(() => {
     if (isAuthenticated && pendingSubmit) {
@@ -28,27 +44,29 @@ export default function ProductReview({ reviews }: { reviews: ReviewType[] }) {
   }, [isAuthenticated, pendingSubmit]);
 
   const submitReview = async () => {
-    try {
-      // 👉 API CALL HERE
-      // await createReview({ rating: reviewRating, message: reviewText });
+    mutateAsync(
+      { ...review, product_id: productId },
+      {
+        onSuccess: (res) => {
+          if (res.success) {
+            setReview({ message: "", rating: 0 });
+            toast.success(res.message);
+          }
+        },
+        onError: (err) => {
+          console.error(err);
+          toast.error(err.message);
+        },
+      },
+    );
 
-      console.log("Review submitted:", {
-        rating: reviewRating,
-        message: reviewText,
-      });
-
-      setReviewRating(0);
-      setReviewText("");
-      setPendingSubmit(false);
-    } catch (error) {
-      console.error(error);
-    }
+    setPendingSubmit(false);
   };
 
   const handleReviewSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!reviewRating || !reviewText.trim()) return;
+    if (!review.rating || !review.message.trim()) return;
 
     if (!isAuthenticated) {
       // User wants to submit but is not logged in
@@ -127,11 +145,16 @@ export default function ProductReview({ reviews }: { reviews: ReviewType[] }) {
                       <button
                         key={i}
                         type="button"
-                        onClick={() => setReviewRating(i + 1)}
+                        onClick={() =>
+                          setReview((prevState) => ({
+                            ...prevState,
+                            rating: i + 1,
+                          }))
+                        }
                         className="p-1 transition-transform active:scale-95">
                         <Star
                           className={`h-6 w-6 sm:h-8 sm:w-8 ${
-                            i < reviewRating
+                            i < review.rating
                               ? "fill-yellow-400 text-yellow-400"
                               : "text-gray-300"
                           }`}
@@ -142,32 +165,23 @@ export default function ProductReview({ reviews }: { reviews: ReviewType[] }) {
 
                   <Textarea
                     placeholder="Write your review here..."
-                    value={reviewText}
-                    onChange={(e) => setReviewText(e.target.value)}
+                    value={review.message}
+                    onChange={(e) =>
+                      setReview((prevState) => ({
+                        ...prevState,
+                        message: e.target.value,
+                      }))
+                    }
                     className="min-h-[120px] resize-none text-sm"
                     required
                   />
 
-                  {isAuthenticated ? (
-                    <Button
-                      type="submit"
-                      className="w-full sm:w-auto"
-                      disabled={!reviewRating || !reviewText.trim()}>
-                      Submit Review
-                    </Button>
-                  ) : (
-                    <div className="flex flex-wrap gap-1 text-sm">
-                      <span className="text-gray-600">
-                        Please log in to place a review.
-                      </span>
-                      <button
-                        type="button"
-                        className="text-red-500 font-bold hover:cursor-pointer"
-                        onClick={() => setIsModalOpen(true)}>
-                        Login
-                      </button>
-                    </div>
-                  )}
+                  <Button
+                    type="submit"
+                    className="w-full sm:w-auto"
+                    disabled={!review.rating || !review.message.trim()}>
+                    {isPending ? "Submitting..." : "Submit Review"}
+                  </Button>
                 </form>
               </div>
             </div>
@@ -184,7 +198,7 @@ export default function ProductReview({ reviews }: { reviews: ReviewType[] }) {
               className="absolute top-3 right-3 text-gray-600 cursor-pointer hover:text-red-500">
               <X className="w-5 h-5" />
             </button>
-            <AuthModal />
+            <AuthModal onCloseModal={() => setIsModalOpen(false)} />
           </div>
         </div>
       )}
