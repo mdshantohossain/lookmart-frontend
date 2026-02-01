@@ -5,7 +5,7 @@ import React, { PropsWithChildren } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { GOOGLE_CLIENT_ID } from "@/config/api";
+import { GOOGLE_CLIENT_ID } from "@/config/env";
 
 export default function ReduxWrapper({ children }: PropsWithChildren) {
   const queryClient = new QueryClient();

@@ -41,7 +41,7 @@ export const useProcessColorAndSize = (variants?: VariantType[]) => {
 
       const processedVariant: ProcessedVariantKeyType = {
         id: variant.id,
-        vid: variant.vid ?? null,
+        vid: variant.vid!,
         variant_key: variant.variant_key ?? "",
         variant_sku: variant.sku ?? "",
         selling_price: variant.selling_price ?? "",

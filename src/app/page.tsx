@@ -6,7 +6,6 @@ import CategorySection from "@/components/page/home/CategorySection";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/features/hooks";
 import { fetchCategories } from "@/features/categorySlice";
-import { fetchProducts } from "@/features/productSlice";
 import TestimonialsSection from "@/components/page/home/TestimonialsSection";
 import Slider from "@/components/page/home/Slider";
 import { fetchAppInfo } from "@/features/appSlice";
@@ -38,15 +37,14 @@ export default function HomePage() {
 
   useEffect(() => {
     dispatch(fetchCategories());
-    dispatch(fetchProducts());
     dispatch(fetchAppInfo());
     setIsLoading(false);
   }, [dispatch]);
 
-  if(isLoading) return <Loading /> 
+  if (isLoading) return <Loading />;
 
   return (
-    <div className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background">
       <div className="w-full">
         <Slider
           images={images}
@@ -54,14 +52,14 @@ export default function HomePage() {
         />
       </div>
 
-      <main className="mx-auto px-4 md:px-8 py-8">
+      <div className="mx-auto px-4 md:px-8 py-8">
         <AddSection />
         <CategorySection />
         <ExclusiveProducts />
         <TrendingProducts />
         <TestimonialsSection />
         <BrandSlideSection />
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

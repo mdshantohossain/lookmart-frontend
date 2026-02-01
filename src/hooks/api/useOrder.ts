@@ -1,17 +1,17 @@
-import { API_URL } from "@/config/api";
-import api from "@/config/axios-config";
-import { useMutation } from "@tanstack/react-query"
+import { API_URL } from "@/config/env";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
-export const useOrderSubmit = () => {
-    return useMutation({
-        mutationKey: ["order-submit"],
-        mutationFn: async (data: any) => {
-            const response = await api.post(`${API_URL}/place-order`, data, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            return response.data;
+export const useOrderPlace = () => {
+  return useMutation({
+    mutationKey: ["order-submit"],
+    mutationFn: async (data: any) => {
+      const res = await axios.post(`${API_URL}/place-order`, data, {
+        headers: {
+          "Content-Type": "application/json",
         },
-    })
-}
+      });
+      return res.data;
+    },
+  });
+};

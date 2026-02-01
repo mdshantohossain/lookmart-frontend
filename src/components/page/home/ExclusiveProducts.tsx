@@ -1,11 +1,11 @@
-"use client";
+
 import Product from "@/components/Product";
 import ProductSkeleton from "@/components/skeleton/ProductSkeleton";
-import useExclusiveProducts from "@/hooks/api/useExclusiveProducts";
+import getExclusiveProducts from "@/hooks/api/get-exclusive-products";
 import { ProductType } from "@/types";
 
 export default function ExclusiveProducts() {
-  const { data: products = [], isLoading } = useExclusiveProducts();
+  const { data: products = [], isLoading } = getExclusiveProducts();
 
   if (!isLoading && products?.length === 0) return null;
 

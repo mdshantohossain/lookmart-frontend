@@ -1,11 +1,12 @@
 import { Suspense } from "react";
-import ProductsContent from "./ProductsContent";
+import ProductsContent from "@/components/ProductsContent";
 import ProductsSkeleton from "@/components/skeleton/ProductsSkeleton";
 
 export default function ProductPage() {
   return (
     <Suspense fallback={<ProductsSkeleton />}>
-      <ProductsContent />
+      <h1>Hello Product Page</h1>?
+      {/* <ProductsContent /> */}
     </Suspense>
   );
 }

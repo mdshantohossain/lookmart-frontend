@@ -6,10 +6,10 @@ import React from 'react'
 export default function NotFound() {
   return (
         <EmptyContent
-          title="Shopping Cart"
-          message="Add some products to get started!"
+          title="404 | Not Found"
+          message="Provided slug is incorrect. Don't motified it."
           image={images.emptyCart}
-          buttonText="Continue Shopping"
+          buttonText="Go To Home"
           href="/"
         />
       );

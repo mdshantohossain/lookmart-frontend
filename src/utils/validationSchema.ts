@@ -1,3 +1,4 @@
+import { current } from "@reduxjs/toolkit";
 import * as yup from "yup";
 
 export const registrationValidationSchema = yup.object({
@@ -41,7 +42,6 @@ export const resetPasswordValidation = yup.object({
 });
 
 // address
-
 export const addressValidationSchema = yup.object({
   type: yup.string().required("Type is required"),
   phone: yup.string().required("Phone number is required"),
@@ -50,4 +50,27 @@ export const addressValidationSchema = yup.object({
   state: yup.string().required("State is required"),
   zipcode: yup.string().required("Zip Code is required"),
   is_default: yup.boolean().nullable(),
+});
+
+// udpate profile Validation 
+export const updateProfileValidationSchema = yup.object({
+  name: yup.string().required("Name is required"),
+  phone: yup
+    .string()
+    .required("Phone number is required"),
+});
+
+// udpate password schema
+
+export const updatePasswordValidationSchema = yup.object({
+  current_password: yup.string().required("Current Password is required"),
+  password: yup
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(16, "Password must be at most 16 characters")
+    .required("Password is required"),
+  confirmation_password: yup
+    .string()
+    .oneOf([yup.ref("password")], "Password didn't match")
+    .required("Confirm Password is required"),
 });

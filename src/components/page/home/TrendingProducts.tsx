@@ -1,12 +1,12 @@
 "use client";
 import Product from "@/components/Product";
 import ProductSkeleton from "@/components/skeleton/ProductSkeleton";
-import useTrendingProducts from "@/hooks/api/useTrendingProducts";
+import getTrendingProducts from "@/hooks/api/getTrendingProducts";
 import { ProductType } from "@/types";
 
 export default function TrendingProducts() {
   const { data: products = [] as ProductType[], isLoading } =
-    useTrendingProducts();
+    getTrendingProducts();
 
   if (!isLoading && products?.length === 0) return null;
 

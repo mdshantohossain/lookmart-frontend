@@ -1,3 +1,34 @@
+export type RegisterPayload = {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  country: string;
+  state: string;
+  city: string;
+  street_address: string;
+  zipcode: string;
+};
+
+export type FilterType = {
+  categories: number[];
+  brands: number[];
+  sizes: string[];
+  price: [number, number];
+};
+
+export interface AxiosErrorResponse {
+  success: boolean;
+  message?: string;
+  errors?: Record<string, string[]>;
+}
+
+export type UpdatePasswordType = {
+  current_password: string;
+  password: string;
+  confirmation_password: string;
+};
+
 export type AddressType = {
   id: number;
   user_id: number;
@@ -8,7 +39,7 @@ export type AddressType = {
   state: string;
   zipcode: string;
   is_default: boolean;
-}
+};
 
 export type UpdatedVariantKeyType = {
   vid: string;
@@ -16,11 +47,11 @@ export type UpdatedVariantKeyType = {
   variant_key: string;
   variant_sku: string;
   price: number;
-}
+};
 
 export type DeliveryInfo = {
-  date: string;         // YYYY-MM-DD
-  dayOfWeek: string;    // Monday, Tuesday, etc.
+  date: string; // YYYY-MM-DD
+  dayOfWeek: string; // Monday, Tuesday, etc.
 };
 
 export type SubCategoryType = {
@@ -30,7 +61,7 @@ export type SubCategoryType = {
   slug: string;
   description: string;
   image: string;
-}
+};
 
 // auth types
 export type RegisterValuesType = {
@@ -50,7 +81,7 @@ export type ResetPasswordType = {
 
 export interface ProcessedVariantKeyType {
   id: number;
-  vid: string ;
+  vid: string;
   variant_key: string;
   variant_sku: string;
   selling_price: string;
@@ -85,17 +116,21 @@ export type CategoryType = {
   id: number;
   name: string;
   image: string;
+  products_count: number;
+  sub_categories: SubCategoryType[];
   slug: string;
 };
 
- export type UserType = {
+export type UserType = {
   id: number;
   name: string;
   email: string;
   phone: string;
   role: string;
-  profile_photo?: string
-}
+  profile_photo?: string;
+  orders_count: number;
+  status: number;
+};
 
 export type ReviewType = {
   id: number;
@@ -106,13 +141,17 @@ export type ReviewType = {
   rating?: string;
   message?: string;
   created_at: string;
-}
-
+};
 export type OtherImageType = {
   id: string;
   image: string;
-}
-
+};
+export type BrandType = {
+  id: number;
+  name: string;
+  image: string;
+  products_count?: number;
+};
 export type VariantType = {
   id: number;
   vid?: string;
@@ -120,13 +159,13 @@ export type VariantType = {
   variant_key?: string;
   selling_price?: string;
   image: string;
-}
+};
 
 type PolicyType = {
   id: number;
   title: string;
   image?: string;
-}
+};
 export type ProductType = {
   id: number;
   category_id: number;
@@ -153,15 +192,16 @@ export type ProductType = {
   variants_title: string;
   reviews: ReviewType[];
   other_images: OtherImageType[];
-  features: string[];
-  tags: string[];
+  tags: string;
   reviews_count: number;
-  reviews_avg_rating: string|null;
+  reviews_avg_rating: string | null;
   variants: VariantType[];
   policies: PolicyType[];
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
   created_at: string;
 };
-
 
 // checkout types
 export type SelectedVariantType = {

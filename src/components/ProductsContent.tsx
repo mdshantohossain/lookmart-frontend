@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,75 +18,50 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Product from "@/components/Product";
-import { useSearchParams } from "next/navigation";
-import useCategoryProduct from "@/hooks/api/useCategoryProduct";
-import { useSearchProducts } from "@/hooks/api/useSearchProducts";
 import FilterSidebar from "@/components/page/product/FilterSidebar";
-import Pagination from "@/components/page/product/Pagination";
-import ProductsSkeleton from "@/components/skeleton/ProductsSkeleton";
-import { ProductType } from "@/types";
+import { FilterType, ProductType } from "@/types";
 import EmptyContent from "@/components/EmptyContent";
 import EmptyProduct from "@/assets/images/search.png";
-import useSubCategoryProduct from "@/hooks/api/useSubCategoryProduct";
+import { getFilterProduct } from "@/lib/api/get-filter-product";
+import ProductsSkeleton from "./skeleton/ProductsSkeleton";
+import Pagination from "./page/product/Pagination";
 
+interface Props {
+  products: ProductType[];
+}
 
-export default function ProductsContent() {
+export default function ProductsContent({ products }: Props) {
   const [sortBy, setSortBy] = useState<string>("default");
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const perPageItems: number = 4;
-  const mainRef = useRef<HTMLDivElement>(null);
+  const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState<FilterType>({
+    categories: [],
+    brands: [],
+    sizes: [],
+    price: [0, 200],
+  });
 
-  // hooks
-  const searchParams = useSearchParams();
-  const category = searchParams.get("category");
-  const subCategory = searchParams.get("sub-category");
-  const query = searchParams.get("query");
+  const {
+    data,
+    refetch,
+    isLoading,
+  } = getFilterProduct(filters, page);
 
-  // get category product
-  const { data: categoryProducts, isLoading: categoryProductsLoading } =
-    useCategoryProduct({ slug: category, enabled: !!category });
+  const { productss = [], current_page, last_page } = data || {};
 
-    // get sub-category product
-  const { data: subCategoryProducts, isLoading: subCategoryProductsLoading } =
-    useSubCategoryProduct({ slug: subCategory, enabled: !!subCategory });
+  console.log({ productss, current_page, last_page });
 
-    // get search product 
-  const { data: searchProducts, isLoading: searchProductsLoading } =
-    useSearchProducts({ query, category });
-
-    // showable products
-  const products =
-    categoryProducts || searchProducts || subCategoryProducts || [];
-
-  // pagination calculations
-  const totalPages = Math.ceil(products.length / perPageItems);
-  const startIndex = (currentPage - 1) * perPageItems;
-  const currentProducts = products?.slice(
-    startIndex,
-    startIndex + perPageItems
+  const onFilterChange = useCallback(
+    (newFilters: FilterType) => {
+      setFilters(newFilters);
+      refetch(); // ✅ manual fetch
+    },
+    [refetch],
   );
 
-  // handle page change
-  const handlePageChange = (page: number): void => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-      mainRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  // handle category change
-  const onCategoryChange = (category: string[] | string): void => {
-    console.log(category);
-  };
-
-  // handle brand change
-  const onBrandChange = (brand: string[] | string): void => {
-    console.log(brand);
-  };
-
-  // handle size change
-  const onSizeChange = (size: string[] | string): void => {
-    console.log(size);
+  //
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    refetch();
   };
 
   // product shorting
@@ -97,30 +72,27 @@ export default function ProductsContent() {
         return products.sort((a: ProductType, b: ProductType) => b.id - a.id);
       case "price-low":
         return products.sort(
-          (a: ProductType, b: ProductType) => a.selling_price - b.selling_price
+          (a: ProductType, b: ProductType) => a.selling_price - b.selling_price,
         );
       case "price-high":
         return products.sort(
-          (a: ProductType, b: ProductType) => b.selling_price - a.selling_price
+          (a: ProductType, b: ProductType) => b.selling_price - a.selling_price,
         );
       // case "rating":
       //   return products.sort((a, b) => b.reviews.rating - a.reviews.rating);
       case "newest":
         return products.sort(
           (a: ProductType, b: ProductType) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
         );
       default:
         return products;
     }
   };
 
-  // show loading skeleton if loading
-  if (
-    categoryProductsLoading ||
-    searchProductsLoading ||
-    subCategoryProductsLoading
-  ) {
+  const displayProducts = data && data.length > 0 ? data : products;
+
+  if (isLoading) {
     return <ProductsSkeleton />;
   }
 
@@ -145,8 +117,7 @@ export default function ProductsContent() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="lg:hidden bg-transparent"
-                >
+                  className="lg:hidden bg-transparent">
                   <Filter className="h-4 w-4 mr-2" />
                   Filters
                 </Button>
@@ -159,15 +130,15 @@ export default function ProductsContent() {
                 </SheetHeader>
                 <div>
                   <FilterSidebar
-                    onCategoryChange={onCategoryChange}
-                    onBrandChange={onBrandChange}
-                    onSizeChange={onSizeChange}
+                    onFilterChange={onFilterChange}
+                    sizes={["hello", "world"]}
                   />
                 </div>
               </SheetContent>
             </Sheet>
             <p className="text-sm text-muted-foreground">
-              Showing {startIndex + perPageItems} of {products.length} products
+              Showing
+              {/* {startIndex + perPageItems} of {products.length} products */}
             </p>
           </div>
           <div className="flex items-center gap-4">
@@ -188,9 +159,8 @@ export default function ProductsContent() {
 
         {/* Products Grid */}
         <div
-          className={`grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3`}
-        >
-          {currentProducts.map((product: ProductType, index: number) => (
+          className={`grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3`}>
+          {displayProducts?.map((product: ProductType, index: number) => (
             <Product key={index} product={product} />
           ))}
         </div>
@@ -198,15 +168,15 @@ export default function ProductsContent() {
         {/* Pagination */}
 
         <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
+          currentPage={current_page}
+          totalPages={last_page   }
           onPageChange={handlePageChange}
         />
       </>
     );
 
   return (
-    <div className="min-h-screen bg-background" ref={mainRef}>
+    <main className="min-h-screen bg-background">
       {/* Header */}
 
       {/* Breadcrumb */}
@@ -222,16 +192,15 @@ export default function ProductsContent() {
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block w-80 flex-shrink-0">
             <FilterSidebar
-              onCategoryChange={onCategoryChange}
-              onBrandChange={onBrandChange}
-              onSizeChange={onSizeChange}
+              onFilterChange={onFilterChange}
+              sizes={["hello", "world"]}
             />
           </aside>
 
           {/* Main Content */}
-          <main className="flex-1">{renderContent}</main>
+          <div className="flex-1">{renderContent}</div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

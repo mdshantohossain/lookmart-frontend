@@ -168,10 +168,10 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2">
-            <AlertDialogCancel className="rounded-xl">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-xl hover:cursor-pointer">Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmLogout}
-              className="bg-destructive  hover:bg-destructive/90 rounded-xl">
+              className="bg-red-500 hover:bg-red-600 rounded-xl hover:cursor-pointer text-white">
               Logout
             </AlertDialogAction>
           </AlertDialogFooter>

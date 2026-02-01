@@ -49,7 +49,6 @@ export const useCart = () => {
     id: string;
     newVariant: UpdatedVariantKeyType;
   }) => {
-    console.log(newVariant);
     dispatch(updateCartItem({ id, newVariant }));
   };
 

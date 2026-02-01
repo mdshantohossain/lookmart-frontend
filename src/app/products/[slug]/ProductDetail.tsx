@@ -15,7 +15,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { ProcessedVariantKeyType, ProductType, SelectedVariantType } from "@/types";
+import type {
+  ProcessedVariantKeyType,
+  ProductType,
+  SelectedVariantType,
+} from "@/types";
 import Image from "next/image";
 import renderStars from "@/components/generateStarts";
 import { useCart } from "@/hooks/useCart";
@@ -27,11 +31,14 @@ import ProductReview from "@/components/page/product-detail/ProductReview";
 import ProductImageGallery from "@/components/page/product-detail/ProductImageGallery";
 
 interface ProductDetailProps {
-   product: ProductType;
-   relatedProducts: ProductType[];
+  product: ProductType;
+  relatedProducts: ProductType[];
 }
 
-export default function ProductDetail({product, relatedProducts}: ProductDetailProps) {
+export default function ProductDetail({
+  product,
+  relatedProducts,
+}: ProductDetailProps) {
   const [quantity, setQuantity] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const [selectedVariant, setSelectedVariant] =
@@ -59,7 +66,10 @@ export default function ProductDetail({product, relatedProducts}: ProductDetailP
 
     setSelectedColor(firstColor);
     setSelectedVariantKey(first_variant_keys);
-    setSelectedSize(first_variant_keys?.variant_key.split("-")[1] || first_variant_keys?.variant_key);
+    setSelectedSize(
+      first_variant_keys?.variant_key.split("-")[1] ||
+        first_variant_keys?.variant_key,
+    );
     setSelectedVariant(firstVariant);
   }, [firstVariant, firstColor, first_variant_keys]);
 
@@ -69,7 +79,10 @@ export default function ProductDetail({product, relatedProducts}: ProductDetailP
 
     if (selectedVariant.default) {
       setSelectedVariantKey(selectedVariant.default);
-      setSelectedSize(selectedVariant.default.variant_key.split("-")[1] || selectedVariant.default.variant_key);
+      setSelectedSize(
+        selectedVariant.default.variant_key.split("-")[1] ||
+          selectedVariant.default.variant_key,
+      );
       return;
     }
 
@@ -78,16 +91,14 @@ export default function ProductDetail({product, relatedProducts}: ProductDetailP
 
     const matched =
       variants.find((v) => {
-        const size = v.variant_key.split("-")[1] || ''
-        if(size === selectedSize) return v
-        
-       return v.variant_key === selectedVariantKey.variant_key
-      }) ||
-      variants[0];
+        const size = v.variant_key.split("-")[1] || "";
+        if (size === selectedSize) return v;
+
+        return v.variant_key === selectedVariantKey.variant_key;
+      }) || variants[0];
 
     setSelectedVariantKey(matched);
     setSelectedSize(matched.variant_key.split("-")[1] || matched.variant_key);
-
   }, [selectedVariant]);
 
   const allImages = useMemo(() => {
@@ -224,15 +235,13 @@ export default function ProductDetail({product, relatedProducts}: ProductDetailP
                             setSelectedVariant(variant);
                             setSelectedColor(color);
                           }}
-                          className={`relative group transition-all hover:cursor-pointer`}
-                        >
+                          className={`relative group transition-all hover:cursor-pointer`}>
                           <div
                             className={`relative w-12 h-12 rounded-full overflow-hidden border-2 ${
                               selectedColor === color
                                 ? "border-red-500"
                                 : "border-gray-200 hover:border-red-500/50"
-                            }`}
-                          >
+                            }`}>
                             <Image
                               src={variant.image}
                               alt={color}
@@ -267,12 +276,11 @@ export default function ProductDetail({product, relatedProducts}: ProductDetailP
                                 selectedSize === size
                                   ? "border-red-500 bg-red-500 text-white"
                                   : "border-gray-200 bg-transparent hover:border-gray-400"
-                              }`}
-                            >
+                              }`}>
                               {size}
                             </button>
                           );
-                        }
+                        },
                       )}
                     </div>
                   </div>
@@ -291,8 +299,7 @@ export default function ProductDetail({product, relatedProducts}: ProductDetailP
                         variant="ghost"
                         size="icon"
                         onClick={() => handleQuantityChange(-1)}
-                        className="h-10 w-10 rounded-l-lg hover:bg-gray-100"
-                      >
+                        className="h-10 w-10 rounded-l-lg hover:bg-gray-100">
                         <Minus className="h-4 w-4" />
                       </Button>
                       <div className="w-12 text-center font-medium text-lg">
@@ -302,8 +309,7 @@ export default function ProductDetail({product, relatedProducts}: ProductDetailP
                         variant="ghost"
                         size="icon"
                         onClick={() => handleQuantityChange(1)}
-                        className="h-10 w-10 rounded-r-lg hover:bg-gray-100"
-                      >
+                        className="h-10 w-10 rounded-r-lg hover:bg-gray-100">
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
@@ -319,8 +325,7 @@ export default function ProductDetail({product, relatedProducts}: ProductDetailP
                         isExistedToCart
                           ? "bg-green-200 text-green-600 hover:bg-green-100"
                           : "bg-primary hover:bg-primary/90"
-                      }`}
-                    >
+                      }`}>
                       {" "}
                       {isExistedToCart ? (
                         <>
@@ -336,8 +341,7 @@ export default function ProductDetail({product, relatedProducts}: ProductDetailP
                     <Button
                       onClick={() => handleShopNow(product)}
                       size="lg"
-                      className="text-base w-full bg-red-500 hover:bg-red-600 h-10"
-                    >
+                      className="text-base w-full bg-red-500 hover:bg-red-600 h-10">
                       <CreditCard className="h-4 w-4 mr-2 text-white" />
                       <span className="text-white">Buy Now</span>
                     </Button>
@@ -347,14 +351,13 @@ export default function ProductDetail({product, relatedProducts}: ProductDetailP
                       variant="outline"
                       className="h-12 w-full sm:w-12 border-gray-300 hover:bg-gray-50"
                       disabled={isWishlisted}
-                      onClick={() => addToWishlist(product)}
-                    >
+                      onClick={() => addToWishlist(product)}>
                       <Heart
                         className={cn(
                           "h-5 w-5 transition-colors",
                           isWishlisted
                             ? "fill-red-500 text-red-500"
-                            : "text-gray-600"
+                            : "text-gray-600",
                         )}
                       />
                       {/* Show text only on mobile since icon is alone on desktop */}
@@ -369,8 +372,7 @@ export default function ProductDetail({product, relatedProducts}: ProductDetailP
               {product.policies.map((policy, index) => (
                 <div
                   key={index}
-                  className="relative flex items-center gap-2 text-sm"
-                >
+                  className="relative flex items-center gap-2 text-sm">
                   {policy.image ? (
                     <Image
                       src={policy.image}
@@ -424,7 +426,10 @@ export default function ProductDetail({product, relatedProducts}: ProductDetailP
           </TabsContent>
 
           {/* Reviews */}
-          <ProductReview reviews={product.reviews} />
+          <ProductReview 
+          productId={product.id}
+          reviews={product.reviews}
+           />
         </Tabs>
 
         {/* Related Products */}

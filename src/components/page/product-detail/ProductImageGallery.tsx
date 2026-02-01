@@ -95,7 +95,7 @@ export default function ProductImageGallery({
                 src={currentMedia?.src}
                 fill
                 alt={productName}
-                className="object-cover"
+                className="object-fit"
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
@@ -157,7 +157,7 @@ export default function ProductImageGallery({
               <button
                 key={`${item.type}-${index}`}
                 onClick={() => setSelectedImageIndex(index)}
-                className={`relative flex-shrink-0 w-16 h-16 sm:w-24 sm:h-24 rounded-lg overflow-hidden border-2 transition-all ${
+                className={`relative flex-shrink-0 w-16 h-16 sm:w-24 sm:h-24 hover:cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
                   selectedImageIndex === index
                     ? "border-red-500"
                     : "border-gray-200 hover:border-red-500/50"

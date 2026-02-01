@@ -5,17 +5,34 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
 import OrderSummary from "@/components/page/checkout/OrderSummary";
-import CheckoutAuthModal from "@/components/modals/checkout-modal/modal";
+import AuthModal from "@/components/modals/auth-modal";
 import { useAppSelector } from "@/features/hooks";
-import { checkoutSchema, CheckoutValues } from "@/services/schema";
+import { checkoutSchema } from "@/services/schema";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import VariantConfirmationModal from "@/components/page/checkout/VariantConfirmationModal";
 
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
+import { useOrderPlace } from "@/hooks/api/useOrder";
+import { DynamicIcon } from "lucide-react/dynamic";
+
+type CheckoutValues = {
+  name?: string;
+  email?: string;
+  password?: string;
+  phone: string;
+  country: string;
+  state: string;
+  city: string;
+  zipCode: string;
+  streetAddress: string;
+}
 
 export default function CheckoutPage() {
+  const [paymentMethod, setPaymentMethod] = useState<"cash" | "online">(
+    "online",
+  );
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // States for Variant Confirmation
@@ -27,6 +44,7 @@ export default function CheckoutPage() {
   const initialValues: CheckoutValues = {
     name: "",
     email: "",
+    password: "",
     phone: "",
     country: "",
     state: "",
@@ -35,9 +53,14 @@ export default function CheckoutPage() {
     streetAddress: "",
   };
 
+  // hooks
+  const { mutateAsync, isPending } = useOrderPlace();
+
   // submit form after check confirmation
   const handleFinalOrder = () => {
-    setIsProcessing(true);
+    setIsProcessing(isPending);
+
+    // mutateAsync()
     console.log("FINAL ORDER SUBMITTED WITH:", pendingValues);
     setIsConfirmModalOpen(false);
   };
@@ -49,7 +72,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="bg-background">
       {/* 🔐 Login Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
@@ -59,7 +82,7 @@ export default function CheckoutPage() {
               className="absolute top-3 right-3 cursor-pointer hover:text-red-500">
               <X />
             </button>
-            <CheckoutAuthModal />
+            <AuthModal onCloseModal={() => setIsModalOpen(false)} />
           </div>
         </div>
       )}
@@ -79,7 +102,7 @@ export default function CheckoutPage() {
           {/* LEFT */}
 
           <div>
-            {isAuthenticated && (
+            {!isAuthenticated && (
               <p className="text-gray-600 mb-5">
                 Please{" "}
                 <span
@@ -93,18 +116,20 @@ export default function CheckoutPage() {
 
             <Formik
               initialValues={initialValues}
-              validationSchema={checkoutSchema}
+              validationSchema={checkoutSchema(isAuthenticated)}
               onSubmit={handleSubmit}>
               {({ values, setFieldValue }) => (
                 <Form className="space-y-5">
-                  {/* First Name */}
+                  {!isAuthenticated && (
+                    <>
+                    {/* First Name */}
                   <div>
                     <label>Full Name *</label>
                     <Field
                       as={Input}
                       name="name"
                       value={values.name}
-                      placeholder="John Doe"
+                      placeholder="Enter your name"
                     />
                     <ErrorMessage
                       name="name"
@@ -130,13 +155,32 @@ export default function CheckoutPage() {
                     />
                   </div>
 
+                   {/* Email */}
+                  <div>
+                    <label>Password *</label>
+                    <Field
+                      as={Input}
+                      name="password"
+                      type="password"
+                      value={values.password}
+                      placeholder="Enter your assword"
+                    />
+                    <ErrorMessage
+                      name="password"
+                      component="p"
+                      className="text-red-500 text-xs"
+                    />
+                  </div>
+                    </>
+                  )}
+
                   {/* Phone */}
                   <div>
                     <label>Phone *</label>
                     <PhoneInput
                       international
                       defaultCountry="US"
-                      value={values.phone}
+                      value={user?.phone || values.phone}
                       onChange={(v) => setFieldValue("phone", v)}
                       className="border rounded-md px-3 py-2 w-full"
                       placeholder="Enter phone number"
@@ -231,11 +275,52 @@ export default function CheckoutPage() {
                     />
                   </div>
 
+                  {/* Payment Method */}
+                  {/* <div className="bg-card border rounded-lg p-6">
+              <h2 className="text-xl font-semibold mb-6">Payment</h2>
+              <RadioGroup
+                value={paymentMethod}
+                // onValueChange={setPaymentMethod}
+                className="space-y-4"
+              >
+                <div className="flex items-center space-x-3">
+                  <RadioGroupItem value="cash" id="cash" />
+                  <Label
+                    htmlFor="cash"
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
+                    <Truck className="w-4 h-4" />
+                    <span>Cash On Delivery</span>
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <RadioGroupItem value="online" id="online" />
+                  <Label
+                    htmlFor="online"
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
+                    <CreditCard className="w-4 h-4" />
+                    <span>Online Payment</span>
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div> */}
+
                   <Button
                     type="submit"
                     disabled={isProcessing}
-                    className="w-full bg-red-500 text-white hover:bg-red-600 transition-colors">
-                    {isProcessing ? "Processing..." : "Place Order"}
+                    className="w-full bg-red-500 text-white hover:bg-red-600 transition-colors hover:cursor-grab">
+                    {isProcessing ? "Order Processing" : "Place Order"}
+
+                    {isProcessing && (
+                      <div
+                        className={`flex justify-center items-center animate-spin`}>
+                        <DynamicIcon
+                          name="loader"
+                          className={`w-12 h-12 text-white`}
+                        />
+                      </div>
+                    )}
                   </Button>
                 </Form>
               )}

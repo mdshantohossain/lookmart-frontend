@@ -2,18 +2,24 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, MapPin, User, Clock } from "lucide-react";
+import { useAppSelector } from "@/features/hooks";
 
 export default function DashboardPage() {
+    const { user, addresses } = useAppSelector(state => state.auth)
+
+    const status = user?.status === 1 ? "Active": user?.status === 2 ? "Blocked" : "Inactive";
+
   const stats = [
-    { title: "Total Orders", value: "12", icon: Package, color: "text-blue-600" },
-    { title: "Saved Addresses", value: "03", icon: MapPin, color: "text-green-600" },
-    { title: "Account Status", value: "Active", icon: User, color: "text-purple-600" },
+    { title: "Total Orders", value: user?.orders_count, icon: Package, color: "text-blue-600" },
+    { title: "Saved Addresses", value: addresses.length, icon: MapPin, color: "text-green-600" },
+    { title: "Account Status", value: status, icon: User, color: "text-purple-600" },
   ];
+
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Hello, John Doe!</h1>
+        <h1 className="text-2xl font-bold">Hello, {user?.name}!</h1>
         <p className="text-slate-500">Welcome back to your account dashboard.</p>
       </div>
 

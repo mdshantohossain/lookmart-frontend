@@ -37,7 +37,7 @@ export default function RegisterContent({
     registerMutation.mutate(values, {
       onSuccess: (res) => {
         setIsSubmitting(false);
-        if (res.status === "success") {
+        if (res.success) {
           setRegistered(true);
           resetForm();
         }
@@ -146,7 +146,7 @@ export default function RegisterContent({
                 type="submit"
                 onClick={() => handleSubmit()}
                 disabled={isSubmitting}
-                className="w-full bg-red-500 hover:bg-red-600 text-white mt-3"
+                className="w-full bg-red-500 hover:bg-red-600 text-white mt-3 hover:cursor-grab"
               >
                 {isSubmitting ? "Registering..." : "Register"}
               </Button>

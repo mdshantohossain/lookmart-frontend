@@ -1,4 +1,4 @@
-import { API_URL } from "@/config/api";
+import { API_URL } from "@/config/env";
 import { ProductType } from "@/types";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
@@ -8,7 +8,7 @@ export const fetchProducts = createAsyncThunk(
     const response = await fetch(API_URL + "/trending-products");
     const data = await response.json();
     return data;
-  }
+  },
 );
 
 const initialState: {
