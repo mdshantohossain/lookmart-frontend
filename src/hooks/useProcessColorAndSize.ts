@@ -47,6 +47,7 @@ export const useProcessColorAndSize = (variants?: VariantType[]) => {
         selling_price: variant.selling_price ?? "",
       };
 
+
       if (size) {
         // Case 1: Has size
         processedVariants[color].sizes[size] = processedVariant;

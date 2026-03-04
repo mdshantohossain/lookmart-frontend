@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 import EmptyCart from "./EmptyCart";
 import Image from "next/image";
 import { useCart } from "@/hooks/useCart";
+import { currency } from "@/services/helper";
 
 interface DropdownCartProps {
   items: CartItemType[];

@@ -12,13 +12,16 @@ export const checkoutSchema = (isAuthenticated: boolean) => {
 
     password: isAuthenticated
       ? Yup.string().optional()
-      : Yup.string().required("Password is required"),
+      : Yup.string()
+          .min(8, "Password must be at least 8 characters")
+          .max(16, "Password must be at most 16 characters")
+          .required("Password is required"),
 
-    phone: Yup.string().required("Phone is required"),
-    country: Yup.string().required("Country is required"),
-    state: Yup.string().required("State is required"),
-    city: Yup.string().required("City is required"),
-    zipCode: Yup.string().required("Zipcode is required"),
-    streetAddress: Yup.string().required("Street address is required"),
+    phone: Yup.string()
+      .matches(/^(?:\+88|88)?01[3-9]\d{8}$/, "Phone number is not valid")
+      .required("Phone is required"),
+    delivery_address: Yup.string().required("Street address is required"),
+    payment_method: Yup.string().required("Payment method is required"),
+    delivery_method: Yup.number().required("Delivery method is required"),
   });
 };

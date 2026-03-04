@@ -83,6 +83,7 @@
 
 body {
   background: white;
+  font-family: "Mono Sans", "Mono Sans Bengali", sans-serif;
 }
 
 .scrollbar-hide::-webkit-scrollbar {

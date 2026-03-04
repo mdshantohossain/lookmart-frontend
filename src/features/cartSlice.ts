@@ -26,8 +26,8 @@ const cartSlice = createSlice({
         image: action.payload.image,
         quantity: action.payload.quantity || 1,
         vid: action.payload.vid,
-        variant_id: action.payload.variant_id || "",
-        variant_key: action.payload.variant_key || "",
+        variant_id: action.payload.variant_id,
+        variant_key: action.payload.variant_key,
         slug: action.payload.slug,
         variants: action.payload.variants,
       });

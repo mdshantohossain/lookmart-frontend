@@ -1,3 +1,23 @@
+
+export type CheckoutPayload = {
+  user_id?: number;
+  name?: string;
+  email?: string;
+  password?: string;
+  phone: string;
+  delivery_address: string;
+  payment_method: "0" | "1";
+  delivery_method: number;
+};
+
+export type ShippingType = {
+  id: number;
+  city_name: string;
+  charge: number;
+  is_free: number;
+  status: number;
+};
+
 export type RegisterPayload = {
   name: string;
   email: string;

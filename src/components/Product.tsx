@@ -19,6 +19,7 @@ import { formatPrice, getDeliveryDateInfo } from "@/utils/helper";
 import ProductMedia from "./ProductMedia";
 import { useProcessColorAndSize } from "@/hooks/useProcessColorAndSize";
 import React from "react";
+import { currency } from "@/services/helper";
 
 type Props = {
   product: ProductType;
