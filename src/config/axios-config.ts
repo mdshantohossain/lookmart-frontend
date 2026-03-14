@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { API_URL } from "@/config/env";
 
-// create axios request wiht token
+// create axios request
 const api = axios.create({
   baseURL: API_URL,
 });

@@ -28,11 +28,8 @@ export default function CategoryDropdownProduct({
 
   // total delivery day
   const { date, dayOfWeek } = getDeliveryDateInfo(
-    product.total_day_to_delivery
+    product.total_delivery_day
   );
-
-  // process color and size of variants
-  const variants = useProcessColorAndSize(product.variants);
 
   // handle shop now
   const handleShopNow = (product: ProductType) => {

@@ -21,7 +21,7 @@ export const checkoutSchema = (isAuthenticated: boolean) => {
       .matches(/^(?:\+88|88)?01[3-9]\d{8}$/, "Phone number is not valid")
       .required("Phone is required"),
     delivery_address: Yup.string().required("Street address is required"),
-    payment_method: Yup.string().required("Payment method is required"),
+    payment_type: Yup.string().required("Payment method is required"),
     delivery_method: Yup.number().required("Delivery method is required"),
   });
 };

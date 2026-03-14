@@ -56,7 +56,7 @@ export default function DropdownCart({
                     </h4>
                     <div className="flex items-center justify-between mt-1">
                       <span className="text-xs sm:text-sm text-gray-600">
-                        {item.quantity} x ${item.price.toFixed(2)}
+                        {item.quantity} x {currency}{item.price.toFixed(2)}
                       </span>
                       <Button
                         variant="ghost"

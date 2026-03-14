@@ -57,6 +57,10 @@ const authSlice = createSlice({
         state.addresses[index] = action.payload;
       }
     },
+    addPhoneNumber: (state, action: PayloadAction<string>) => {
+      if (!state.user) return;
+      state.user.phone = action.payload;
+    },
     filterAddress: (state, action: PayloadAction<number>) => {
       state.addresses = state.addresses.filter(
         (address) => address.id !== action.payload,
@@ -65,7 +69,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { login, addAddress,updateProfile, filterAddress, logout } =
+export const { login, addAddress,updateProfile, filterAddress, logout, addPhoneNumber } =
   authSlice.actions;
 
 export default authSlice.reducer;

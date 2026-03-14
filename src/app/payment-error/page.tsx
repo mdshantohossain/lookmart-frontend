@@ -2,22 +2,43 @@
 
 import FormSubmissionSuccess from "@/components/FormSubmissionSuccess";
 import { Card } from "@/components/ui/card";
+import { useVerifyOrder } from "@/hooks/api/verify-payment";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import Loading from "../loading";
 
 export default function ParmentErrorPage() {
-  const router = useRouter();
+  const [valid, setValid] = useState(false);
+  const [message, setMessage] = useState("");
 
+  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  // useEffect(() => {
-  //   if (!token) {
-  //     router.replace("/");
-  //   }
-  // }, [token, router]);
+  const { data: res, isPending } = useVerifyOrder(token!);
 
-  // if (!token) return null;
+  useEffect(() => {
+    if (!res) return;
+
+    if (res.success) {
+      setValid(true);
+      setMessage(res.message);
+    } else {
+      router.replace("/");
+    }
+  }, [res]);
+
+  useEffect(() => {
+    if (!token) {
+      toast.error("Invalid order token");
+      router.replace("/");
+    }
+  }, [token, router, valid]);
+
+  if (isPending) return <Loading />;
+
+  if (!valid) return null;
 
   return (
     <div className="flex items-center justify-center px-4 py-10 bg-background">
@@ -25,9 +46,9 @@ export default function ParmentErrorPage() {
         <FormSubmissionSuccess
           icon="circle-x"
           title="Payment Unsuccessful"
-          message="Your payment was not successful. Your order has been created but is currently unpaid. You can retry the payment anytime from your dashboard."
-          buttonTitle="Retry Payment"
-          href={() => router.replace("/checkout")}
+          message={message}
+          buttonTitle="Go to dashboard"
+          href={() => router.replace("/dashboard/order")}
         />
       </Card>
     </div>

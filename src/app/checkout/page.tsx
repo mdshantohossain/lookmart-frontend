@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { CreditCard, Truck, X } from "lucide-react";
 import OrderSummary from "@/components/page/checkout/OrderSummary";
 import AuthModal from "@/components/modals/auth-modal";
-import { useAppSelector } from "@/features/hooks";
+import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import { checkoutSchema } from "@/services/schema";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import VariantConfirmationModal from "@/components/page/checkout/VariantConfirmationModal";
@@ -19,8 +19,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { useShipping } from "@/lib/api/get-shipping";
 import { CheckoutPayload, ShippingType } from "@/types";
 import { useCart } from "@/hooks/useCart";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 import { currency } from "@/services/helper";
+import { toast } from "react-toastify";
+import { addPhoneNumber, login } from "@/features/authSlice";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,6 +39,8 @@ export default function CheckoutPage() {
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const { items, cartTotal } = useCart();
   const { data: shipping } = useShipping();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   // default delivery hooks
   const defaultDeliveryMethod = useMemo(() => {
@@ -73,7 +78,7 @@ export default function CheckoutPage() {
         user_id: user?.id,
         phone: user?.phone!,
         delivery_address: "",
-        payment_method: "1",
+        payment_type: "1",
         delivery_method: defaultDeliveryMethod,
       }
     : {
@@ -82,7 +87,7 @@ export default function CheckoutPage() {
         password: "",
         phone: "",
         delivery_address: "",
-        payment_method: "1",
+        payment_type: "1",
         delivery_method: defaultDeliveryMethod,
       };
 
@@ -94,6 +99,9 @@ export default function CheckoutPage() {
     if (!orderPayload) return;
     setOrderError("");
 
+    if (isAuthenticated && !user?.phone) {
+      dispatch(addPhoneNumber(orderPayload.phone));
+    }
     // Map cart items to only what backend needs
     if (items.length === 0) return;
     const products = items.map((item) => ({
@@ -105,12 +113,6 @@ export default function CheckoutPage() {
     // calculate order total
     const orderTotal = cartTotal + shippingCost;
 
-    console.log({
-      ...orderPayload,
-      order_total: orderTotal,
-      products,
-    });
-
     mutateAsync(
       {
         ...orderPayload,
@@ -119,9 +121,35 @@ export default function CheckoutPage() {
       },
       {
         onSuccess: (res) => {
-          console.log(res);
-          if (res.success === true) {
-            window.location.href = res.data.payment_url;
+          if (res.success) {
+            const { auth_response, payment_url, token } = res.data;
+
+            // show order success message
+            toast.success(res.message);
+
+            // auth configuration
+            if (auth_response) {
+              if (auth_response.type === "login") {
+                dispatch(
+                  login({
+                    user: auth_response.data.user,
+                    token: auth_response.data.token,
+                    addresses: auth_response.data.user.addresses,
+                  }),
+                );
+              }
+            }
+
+            // redirect to paymentgateway
+            if (payment_url) {
+              window.location.href = payment_url;
+            }
+
+            if (token) {
+              router.push("/order-success?token=" + token);
+            }
+          } else {
+            toast.error(res.message);
           }
         },
         onError: (err) => {
@@ -345,11 +373,11 @@ export default function CheckoutPage() {
                       Payment Method
                     </h2>
                     <RadioGroup
-                      value={values.payment_method}
+                      value={values.payment_type}
                       onValueChange={(val) =>
-                        setFieldValue("payment_method", val)
+                        setFieldValue("payment_type", val)
                       }
-                      name="payment_method">
+                      name="payment_type">
                       <div className="flex items-center space-x-3">
                         <RadioGroupItem value="0" id="cash" />
                         <Label

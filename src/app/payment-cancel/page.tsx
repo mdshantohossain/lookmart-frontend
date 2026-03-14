@@ -1,15 +1,13 @@
-"use client";
+"use client"; 
+import FormSubmissionSuccess from '@/components/FormSubmissionSuccess';
+import { Card } from '@/components/ui/card';
+import { useVerifyOrder } from '@/hooks/api/verify-payment';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify';
+import Loading from '../loading';
 
-import FormSubmissionSuccess from "@/components/FormSubmissionSuccess";
-import { Card } from "@/components/ui/card";
-import { useVerifyOrder } from "@/hooks/api/verify-payment";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import Loading from "../loading";
-import { toast } from "react-toastify";
-
-
-export default function OrderSuccessPage() {
+export default function PaymentCancelPage() {
   const [valid, setValid] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -41,13 +39,13 @@ export default function OrderSuccessPage() {
 
   if (!valid) return null;
 
-  return (
+   return (
     <div className="flex items-center justify-center px-4 py-10 bg-background">
       <Card className="w-full max-w-md">
         <FormSubmissionSuccess
-          title="Order Successful 🎉"
+          title="Payment Canceled"
           message={message}
-          buttonTitle="Go to Dashboard"
+          buttonTitle="Retry Payment"
           href={() => router.replace("/dashboard/order")}
         />
       </Card>

@@ -45,13 +45,11 @@ export default function Product({
   const { integer, decimal } = formatPrice(product.selling_price);
 
   // delivery day
-  const { date, dayOfWeek } = getDeliveryDateInfo(
-    product.total_day_to_delivery
-  );
+  const { date, dayOfWeek } = getDeliveryDateInfo(product.total_delivery_day);
 
   // process color and size of variants
   const { processedVariants, first_variant_keys } = useProcessColorAndSize(
-    product?.variants
+    product?.variants,
   );
 
   // add to wishlist
@@ -106,7 +104,7 @@ export default function Product({
             "w-5 h-5 transition-colors",
             isWishlisted
               ? "fill-red-500 text-red-500"
-              : "text-gray-600 hover:text-red-500"
+              : "text-gray-600 hover:text-red-500",
           )}
         />
       </button>
@@ -145,32 +143,40 @@ export default function Product({
         {/* Price */}
         <div className="flex items-center gap-2 mb-1">
           <div className="flex gap-1">
-            <span className="text-lg align-super">$</span>
+            <span className="text-lg align-super">{currency}</span>
             <span className="text-3xl font-semibold">{integer}</span>
             <span className="text-sm align-super">{decimal}</span>
           </div>
           {product.original_price && (
             <span className="text-sm text-muted-foreground line-through">
-              ${product.original_price}
+              {currency}
+              {product.original_price}
             </span>
           )}
         </div>
 
         {/* total sold */}
-        {product.total_sold && (
+        {product.show_default_sold ? (
           <div className="flex items-center gap-1 mb-2">
             <TrendingUp className="w-3 h-3" />
-            <span className="text-sm">{product.total_sold}</span>
+            <span className="text-sm">{product.default_sold}</span>
           </div>
+        ) : (
+          product.total_sold > 0 && (
+            <div className="flex items-center gap-1 mb-2">
+              <TrendingUp className="w-3 h-3" />
+              <span className="text-sm">
+                {`Total sold ${product.total_sold}`}
+              </span>
+            </div>
+          )
         )}
 
         {/* Delivery Tag */}
         <div className="flex items-center gap-1.5 text-[10px] text-green-600 font-medium bg-green-50 dark:bg-green-900/20 w-fit px-2 py-1 rounded-full mb-4">
           <Truck className="w-3 h-3" />
           <span>
-            {product.is_free_delivery === 1
-              ? "Free delivery: "
-              : "Delivery on: "}{" "}
+            {product.is_free_delivery ? "Free delivery: " : "Delivery on: "}{" "}
             {date}, {dayOfWeek}
           </span>
         </div>
