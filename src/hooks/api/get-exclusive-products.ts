@@ -5,8 +5,15 @@ export default function getExclusiveProducts() {
   return useQuery({
     queryKey: ["exclusive-products"],
     queryFn: async () => {
-      const response = await fetch(API_URL + "/exclusive-products");
-      return response.json();
+      const response = await fetch(API_URL + "/exclusive-products", {
+        next: {
+          revalidate: 7200,
+        },
+      });
+
+      const { data } = await response.json();
+
+      return data;
     },
   });
 }

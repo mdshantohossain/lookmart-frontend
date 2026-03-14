@@ -6,7 +6,14 @@ export default function getTrendingProducts() {
   return useQuery({
     queryKey: ["trending-products"],
     queryFn: async () => {
-      const { data } = await axios.get(API_URL + "/trending-products");
+      const res = await fetch(API_URL + "/trending-products", {
+        next: {
+          revalidate: 7200,
+        }
+      });
+
+      const { data } = await res.json();
+      
       return data;
     },
   });

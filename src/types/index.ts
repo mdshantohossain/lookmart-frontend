@@ -1,3 +1,23 @@
+
+export type CheckoutPayload = {
+  user_id?: number;
+  name?: string;
+  email?: string;
+  password?: string;
+  phone: string;
+  delivery_address: string;
+  payment_type: "0" | "1";
+  delivery_method: number;
+};
+
+export type ShippingType = {
+  id: number;
+  city_name: string;
+  charge: number;
+  is_free: number;
+  status: number;
+};
+
 export type RegisterPayload = {
   name: string;
   email: string;
@@ -181,14 +201,16 @@ export type ProductType = {
   video_thumbnail?: string;
   category: CategoryType;
   is_trending?: string;
+  is_export: boolean;
   slug: string;
   short_description: string;
   long_description: string;
   status: number;
-  total_day_to_delivery?: number;
-  total_sold?: string;
+  total_delivery_day?: number;
+  total_sold: number;
+  default_sold?: string;
+  show_default_sold?: boolean;
   is_free_delivery?: number;
-  updated_at: string;
   variants_title: string;
   reviews: ReviewType[];
   other_images: OtherImageType[];

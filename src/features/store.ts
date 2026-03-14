@@ -12,7 +12,7 @@ import { persistReducer, persistStore } from "redux-persist";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["app", "auth", "cart", "wishlist"],
+  whitelist: ["app", "cart", "wishlist"],
 };
 
 const rootReducer = combineReducers({
