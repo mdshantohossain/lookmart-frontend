@@ -8,7 +8,7 @@ import getSubCategoryProduct from "@/lib/api/get-sub-category-products";
 import { API_URL } from "@/config/env";
 import { CategoryType, SubCategoryType } from "@/types";
 
-// metadata 
+// metadata
 export { generateMetadata };
 
 export const revalidate = 144000;
@@ -21,14 +21,18 @@ export async function generateStaticParams() {
       revalidate: 7200,
     },
   });
-  
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch categories");
+  }
+
   const categories = await res.json();
 
   return categories.flatMap((category: CategoryType) =>
     category.sub_categories.map((sub: SubCategoryType) => ({
       category: category.slug,
       subCategory: sub.slug,
-    }))
+    })),
   );
 }
 
@@ -40,7 +44,9 @@ export default async function SubCategoryPage({
   const { subCategory } = await params;
 
   // get category product
-  const { products } = await getSubCategoryProduct(subCategory) || { products: []};
+  const { products } = (await getSubCategoryProduct(subCategory)) || {
+    products: [],
+  };
 
   if (products?.length === 0) {
     return (
