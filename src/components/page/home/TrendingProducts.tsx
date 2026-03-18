@@ -1,7 +1,7 @@
 "use client";
 import Product from "@/components/Product";
 import ProductSkeleton from "@/components/skeleton/ProductSkeleton";
-import getTrendingProducts from "@/hooks/api/getTrendingProducts";
+import getTrendingProducts from "@/services/api/trending-products.api";
 import { ProductType } from "@/types";
 
 export default function TrendingProducts() {

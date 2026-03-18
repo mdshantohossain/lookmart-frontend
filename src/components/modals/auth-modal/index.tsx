@@ -2,36 +2,33 @@
 
 import LoginContent from "@/app/(auth)/login/LoginContent";
 import RegisterContent from "@/app/(auth)/register/RegisterContent";
-import { useState } from "react";
+import { useAuthModalContext } from "@/hooks/useAuthModalContext";
+import { X } from "lucide-react";
 
-interface Props {
-  onCloseModal?: () => void;
-}
-export default function AuthModal({onCloseModal}: Props) {
-  const [modalWhich, setModalWhich] = useState("login");
+export default function AuthModal() {
+  const { isAuthModalOpen, setIsAuthModalOpen, setIsFromModal, whichModal } =
+    useAuthModalContext();
 
-  const handlePressOnSignUpOrSignIn = () => {
-    setModalWhich(modalWhich === "login" ? "register" : "login");
-  };
-
-  const handleLogin = () => {
-    setModalWhich("login");
-  };
+  if (!isAuthModalOpen) return null;
 
   const renderContent =
-    modalWhich === "login" ? (
-      <LoginContent
-        onPressSignUp={handlePressOnSignUpOrSignIn}
-        fromModal={true}
-        onCloseModal={onCloseModal}
-      />
-    ) : (
-      <RegisterContent
-        onPressSignUp={handlePressOnSignUpOrSignIn}
-        fromModal={true}
-        handleLogin={handleLogin}
-      />
-    );
+    whichModal === "login" ? <LoginContent /> : <RegisterContent />;
 
-  return renderContent;
+  const onClose = () => {
+    setIsAuthModalOpen(false);
+    setIsFromModal(false);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
+      <div className="bg-card rounded-lg w-full max-w-md p-6 relative">
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 cursor-pointer hover:text-red-500">
+          <X />
+        </button>
+        {renderContent}
+      </div>
+    </div>
+  );
 }

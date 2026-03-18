@@ -426,10 +426,7 @@ export default function ProductDetail({
           </TabsContent>
 
           {/* Reviews */}
-          <ProductReview 
-          productId={product.id}
-          reviews={product.reviews}
-           />
+          <ProductReview productId={product.id} reviews={product.reviews} />
         </Tabs>
 
         {/* Related Products */}

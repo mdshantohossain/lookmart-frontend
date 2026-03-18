@@ -18,8 +18,6 @@ export const getFilterProduct = (filters: FilterType, page: number) => {
         },
       });
 
-      console.log(data.data);
-
       return data.data;
     },
     // staleTime: 1000 * 60 * 2,

@@ -35,6 +35,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useAppDispatch();
 
+
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(fetchAppInfo());

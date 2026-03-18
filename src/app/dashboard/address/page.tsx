@@ -33,7 +33,7 @@ import {
   useDeleteAddress,
   useSaveAddressMutaion,
   useUpdateAddressMutaion,
-} from "@/hooks/api/useAddress";
+} from "@/services/api/address.api";
 import { toast } from "react-toastify";
 import { addAddress, filterAddress } from "@/features/authSlice";
 
@@ -87,8 +87,7 @@ export default function AddressPage() {
   // confirmation delete
   const confirmDelete = () => {
     deleteMutation.mutateAsync(currentAddress!.id, {
-      onSuccess: (res) => {
-        console.log(res);
+      onSuccess: (res) => { 
         if (res.success) {
           toast.success(res.message);
           dispatch(filterAddress(currentAddress!.id));

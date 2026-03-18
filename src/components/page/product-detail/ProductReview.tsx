@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { logout } from "@/features/authSlice";
-import { useAppDispatch, useAppSelector } from "@/features/hooks";
-import { useCreateReview } from "@/hooks/api/useCreateReview";
+import { useAppSelector } from "@/features/hooks";
+import { useAuthModalContext } from "@/hooks/useAuthModalContext";
+import { useCreateReview } from "@/services/api/create-review.api";
 import { ReviewType } from "@/types";
 import images from "@/utils/images";
 import { Star, X } from "lucide-react";
@@ -29,17 +29,16 @@ export default function ProductReview({
     message: "",
     rating: 0,
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingSubmit, setPendingSubmit] = useState(false);
 
   // hooks
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const { mutateAsync, isPending } = useCreateReview();
+  const { setIsAuthModalOpen, setIsFromModal } = useAuthModalContext();
 
   useEffect(() => {
     if (isAuthenticated && pendingSubmit) {
       submitReview();
-      setIsModalOpen(false);
     }
   }, [isAuthenticated, pendingSubmit]);
 
@@ -70,8 +69,9 @@ export default function ProductReview({
 
     if (!isAuthenticated) {
       // User wants to submit but is not logged in
+      setIsAuthModalOpen(true);
+      setIsFromModal(true);
       setPendingSubmit(true);
-      setIsModalOpen(true);
       return;
     }
 
@@ -188,20 +188,6 @@ export default function ProductReview({
           </CardContent>
         </Card>
       </TabsContent>
-
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] px-4">
-          <div className="bg-card rounded-lg shadow-lg w-full max-w-md p-6 relative animate-fadeIn">
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-600 cursor-pointer hover:text-red-500">
-              <X className="w-5 h-5" />
-            </button>
-            <AuthModal onCloseModal={() => setIsModalOpen(false)} />
-          </div>
-        </div>
-      )}
     </>
   );
 }

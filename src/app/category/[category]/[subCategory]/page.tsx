@@ -4,7 +4,7 @@ import ProductsSkeleton from "@/components/skeleton/ProductsSkeleton";
 import EmptyContent from "@/components/EmptyContent";
 import images from "@/utils/images";
 import { generateMetadata } from "./metadata";
-import getSubCategoryProduct from "@/lib/api/get-sub-category-products";
+import getSubCategoryProduct from "@/services/api/sub-category-products.api";
 import { API_URL } from "@/config/env";
 import { CategoryType, SubCategoryType } from "@/types";
 

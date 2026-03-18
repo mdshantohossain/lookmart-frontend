@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { getCategories } from "@/hooks/api/get-categories";
+import { getCategories } from "@/services/api/category.api";
 import Link from "next/link";
 import useCurrentUrl from "@/hooks/useCurrentUrl";
 import Product from "./Product";

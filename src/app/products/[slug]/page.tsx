@@ -1,10 +1,11 @@
 import type React from "react";
 import { notFound } from "next/navigation";
-import { getProductDetail, getRelatedProduct } from "@/lib/api/product-detail";
+import { getProductDetail } from "@/services/api/product-detail.api";
 import ProductDetail from "./ProductDetail";
 import { generateMetadata } from "./metadata";
 import { ProductType } from "@/types";
 import { API_URL } from "@/config/env";
+import { getRelatedProduct } from "@/services/api/related-products.api";
 
 // exported dynamically metadata
 export { generateMetadata };

@@ -1,16 +1,7 @@
 import { API_URL } from "@/config/env";
-import { AddressType, UserType } from "@/types";
+import { AddressType, SocialLoginResponse, UserType } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-
-type SocialLoginResponse = {
-  success: boolean;
-  data: {
-    user: UserType & {addresses: AddressType[];};
-    token: string;
-    
-  };
-};
 
 export const useSocialLoginMutation = () => {
   return useMutation<

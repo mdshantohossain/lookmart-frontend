@@ -22,7 +22,7 @@ import FilterSidebar from "@/components/page/product/FilterSidebar";
 import { FilterType, ProductType } from "@/types";
 import EmptyContent from "@/components/EmptyContent";
 import EmptyProduct from "@/assets/images/search.png";
-import { getFilterProduct } from "@/lib/api/get-filter-product";
+import { getFilterProduct } from "@/services/api/filter-product.api";
 import ProductsSkeleton from "./skeleton/ProductsSkeleton";
 import Pagination from "./page/product/Pagination";
 
@@ -40,15 +40,9 @@ export default function ProductsContent({ products }: Props) {
     price: [0, 200],
   });
 
-  const {
-    data,
-    refetch,
-    isLoading,
-  } = getFilterProduct(filters, page);
+  const { data, refetch, isLoading } = getFilterProduct(filters, page);
 
   const { productss = [], current_page, last_page } = data || {};
-
-  console.log({ productss, current_page, last_page });
 
   const onFilterChange = useCallback(
     (newFilters: FilterType) => {
@@ -169,7 +163,7 @@ export default function ProductsContent({ products }: Props) {
 
         <Pagination
           currentPage={current_page}
-          totalPages={last_page   }
+          totalPages={last_page}
           onPageChange={handlePageChange}
         />
       </>

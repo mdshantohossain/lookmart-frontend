@@ -231,3 +231,11 @@ export type SelectedVariantType = {
   sizes: { [size: string]: ProcessedVariantKeyType };
   default: ProcessedVariantKeyType | null;
 };
+
+export type SocialLoginResponse = {
+  success: boolean;
+  data: {
+    user: UserType;
+    token: string;
+  };
+};

@@ -4,7 +4,7 @@ import FormSubmissionSuccess from "@/components/FormSubmissionSuccess";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { resetPasswordMutation } from "@/hooks/api/useAuth";
+import { resetPasswordMutation } from "@/services/api/auth.api";
 import { resetPasswordValidation } from "@/utils/validationSchema";
 import { AxiosError } from "axios";
 import { Formik } from "formik";
@@ -42,7 +42,7 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = (
     values: PasswordResetType,
-    { resetForm }: { resetForm: () => void }
+    { resetForm }: { resetForm: () => void },
   ) => {
     resetMutation.mutateAsync(values, {
       onSuccess: (res) => {
@@ -112,8 +112,7 @@ export default function ResetPasswordPage() {
                   confirm_password: "",
                 }}
                 validationSchema={resetPasswordValidation}
-                onSubmit={handleSubmit}
-              >
+                onSubmit={handleSubmit}>
                 {({
                   values,
                   errors,
@@ -156,8 +155,7 @@ export default function ResetPasswordPage() {
                     <Button
                       type="submit"
                       className="w-full bg-red-500 hover:bg-red-600 text-white mt-3"
-                      disabled={resetMutation.isPending}
-                    >
+                      disabled={resetMutation.isPending}>
                       {resetMutation.isPending
                         ? "Resetting..."
                         : "Reset Password"}

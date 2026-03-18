@@ -1,5 +1,5 @@
 import HomeCategorySkeleton from "@/components/skeleton/HomeCategorySkeleton";
-import { getCategories } from "@/hooks/api/get-categories";
+import { getCategories } from "@/services/api/category.api";
 import Image from "next/image";
 import Link from "next/link";
 

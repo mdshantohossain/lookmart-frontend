@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { forgotPasswordMutation } from "@/hooks/api/useAuth";
+import { forgotPasswordMutation } from "@/services/api/auth.api";
 import FormSubmissionSuccess from "@/components/FormSubmissionSuccess";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ export default function ForgotPasswordPage() {
     message: string;
   }>({ status: "", title: "", message: "" });
   const [credentialError, setCredentialError] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // hooks
@@ -40,7 +40,10 @@ export default function ForgotPasswordPage() {
     {
       setSubmitting,
       resetForm,
-    }: { setSubmitting: (isSubmitting: boolean) => void; resetForm: () => void }
+    }: {
+      setSubmitting: (isSubmitting: boolean) => void;
+      resetForm: () => void;
+    },
   ) => {
     setSubmitting(true);
     setCredentialError(undefined);
@@ -99,8 +102,7 @@ export default function ForgotPasswordPage() {
           <Formik
             initialValues={{ email: "" } as { email: string }}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
+            onSubmit={handleSubmit}>
             {({
               values,
               errors,
@@ -130,8 +132,7 @@ export default function ForgotPasswordPage() {
                     type="submit"
                     onClick={() => handleSubmit()}
                     disabled={isSubmitting}
-                    className="bg-red-500 hover:bg-red-600 text-white"
-                  >
+                    className="bg-red-500 hover:bg-red-600 text-white">
                     {isSubmitting ? "Sending..." : "Send link"}
                   </Button>
                 </div>
@@ -143,8 +144,7 @@ export default function ForgotPasswordPage() {
             {"Login with password? "}
             <span
               onClick={handleClickToGo}
-              className="text-blue-600 hover:text-blue-800 cursor-pointer hover:underline"
-            >
+              className="text-blue-600 hover:text-blue-800 cursor-pointer hover:underline">
               Go back
             </span>
           </div>

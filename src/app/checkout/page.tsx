@@ -5,28 +5,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CreditCard, Truck, X } from "lucide-react";
 import OrderSummary from "@/components/page/checkout/OrderSummary";
-import AuthModal from "@/components/modals/auth-modal";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import { checkoutSchema } from "@/services/schema";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import VariantConfirmationModal from "@/components/page/checkout/VariantConfirmationModal";
 
-import { useOrderPlace } from "@/hooks/api/useOrder";
+import { useOrderPlace } from "@/services/api/order-api";
 import { DynamicIcon } from "lucide-react/dynamic";
 import { Label } from "@radix-ui/react-label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { useShipping } from "@/lib/api/get-shipping";
+import { useShipping } from "@/services/api/shipping.api";
 import { CheckoutPayload, ShippingType } from "@/types";
 import { useCart } from "@/hooks/useCart";
 import { AxiosError } from "axios";
 import { currency } from "@/services/helper";
 import { toast } from "react-toastify";
-import { addPhoneNumber, login } from "@/features/authSlice";
+import { addPhoneNumber } from "@/features/authSlice";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import { useAuthModalContext } from "@/hooks/useAuthModalContext";
 
 export default function CheckoutPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   // States for Variant Confirmation
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [orderPayload, setOrderPayload] = useState<CheckoutPayload | null>(
@@ -41,6 +41,10 @@ export default function CheckoutPage() {
   const { data: shipping } = useShipping();
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { authLogin } = useAuth();
+  const { setIsAuthModalOpen, setIsFromModal } = useAuthModalContext();
+
+  console.log(user);
 
   // default delivery hooks
   const defaultDeliveryMethod = useMemo(() => {
@@ -130,13 +134,7 @@ export default function CheckoutPage() {
             // auth configuration
             if (auth_response) {
               if (auth_response.type === "login") {
-                dispatch(
-                  login({
-                    user: auth_response.data.user,
-                    token: auth_response.data.token,
-                    addresses: auth_response.data.user.addresses,
-                  }),
-                );
+                authLogin(auth_response.data.user, auth_response.data.token);
               }
             }
 
@@ -145,7 +143,7 @@ export default function CheckoutPage() {
               window.location.href = payment_url;
             }
 
-            if (token) {
+            if (!payment_url && token) {
               router.push("/order-success?token=" + token);
             }
           } else {
@@ -177,22 +175,14 @@ export default function CheckoutPage() {
     setIsConfirmModalOpen(true);
   };
 
+  // handle login
+  const handleClickOnLogin = () => {
+    setIsFromModal(true);
+    setIsAuthModalOpen(true);
+  };
+
   return (
     <div className="bg-background">
-      {/* 🔐 Login Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-          <div className="bg-card rounded-lg w-full max-w-md p-6 relative">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-3 right-3 cursor-pointer hover:text-red-500">
-              <X />
-            </button>
-            <AuthModal onCloseModal={() => setIsModalOpen(false)} />
-          </div>
-        </div>
-      )}
-
       {/* 📦 Variant & Quantity Confirmation Modal */}
       {isConfirmModalOpen && (
         <VariantConfirmationModal
@@ -212,7 +202,7 @@ export default function CheckoutPage() {
               <p className="text-gray-600 mb-5">
                 Please{" "}
                 <span
-                  onClick={() => setIsModalOpen(true)}
+                  onClick={handleClickOnLogin}
                   className="text-red-500 font-semibold cursor-pointer">
                   login
                 </span>{" "}

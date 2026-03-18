@@ -13,7 +13,7 @@ import {
 import {
   usePasswordUpdateMutation,
   useProfileUpdateMutation,
-} from "@/hooks/api/useAuth";
+} from "@/services/api/auth.api";
 import { AxiosErrorResponse, UpdatePasswordType } from "@/types";
 import { toast } from "react-toastify";
 import { updateProfile } from "@/features/authSlice";

@@ -13,7 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import { toast } from "react-toastify";
-import { logoutMutation } from "@/hooks/api/useAuth";
+import { logoutMutation } from "@/services/api/auth.api";
 import { logout } from "@/features/authSlice";
 import {
   AlertDialog,
@@ -168,7 +168,9 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2">
-            <AlertDialogCancel className="rounded-xl hover:cursor-pointer">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-xl hover:cursor-pointer">
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmLogout}
               className="bg-red-500 hover:bg-red-600 rounded-xl hover:cursor-pointer text-white">

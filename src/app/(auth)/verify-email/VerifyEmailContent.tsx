@@ -1,13 +1,16 @@
 import FormSubmissionSuccess from "@/components/FormSubmissionSuccess";
 import { Card } from "@/components/ui/card";
-import { useResendVerificationEmail, useVerifyEmail } from "@/hooks/api/useAuth";
+import {
+  useResendVerificationEmail,
+  useVerifyEmail,
+} from "@/services/api/auth.api";
 import { AxiosError } from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { memo, useEffect, useMemo, useState } from "react";
 
 type StatusType = "loading" | "success" | "error";
 
-const  VerifyEmailContent = () => {
+const VerifyEmailContent = () => {
   const [contentState, setContentState] = useState<{
     status: StatusType | "";
     title: string;
@@ -156,6 +159,6 @@ const  VerifyEmailContent = () => {
       <Card className="w-full max-w-md">{renderContent}</Card>
     </div>
   );
-}
+};
 
 export default memo(VerifyEmailContent);
