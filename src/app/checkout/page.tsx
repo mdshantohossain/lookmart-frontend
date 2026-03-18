@@ -30,7 +30,7 @@ export default function CheckoutPage() {
   // States for Variant Confirmation
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [orderPayload, setOrderPayload] = useState<CheckoutPayload | null>(
-    null,
+    null
   );
   const [orderError, setOrderError] = useState<string>("");
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(0);
@@ -43,8 +43,6 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { authLogin } = useAuth();
   const { setIsAuthModalOpen, setIsFromModal } = useAuthModalContext();
-
-  console.log(user);
 
   // default delivery hooks
   const defaultDeliveryMethod = useMemo(() => {
