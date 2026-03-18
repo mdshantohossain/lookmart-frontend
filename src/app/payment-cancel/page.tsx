@@ -1,11 +1,11 @@
-"use client"; 
-import FormSubmissionSuccess from '@/components/FormSubmissionSuccess';
-import { Card } from '@/components/ui/card';
-import { useVerifyOrder } from '@/hooks/api/verify-payment';
-import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
-import { toast } from 'react-toastify';
-import Loading from '../loading';
+"use client";
+import FormSubmissionSuccess from "@/components/FormSubmissionSuccess";
+import { Card } from "@/components/ui/card";
+import { useVerifyOrder } from "@/services/api/verify-payment";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import Loading from "../loading";
 
 export default function PaymentCancelPage() {
   const [valid, setValid] = useState(false);
@@ -39,7 +39,7 @@ export default function PaymentCancelPage() {
 
   if (!valid) return null;
 
-   return (
+  return (
     <div className="flex items-center justify-center px-4 py-10 bg-background">
       <Card className="w-full max-w-md">
         <FormSubmissionSuccess

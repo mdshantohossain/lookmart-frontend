@@ -1,26 +1,20 @@
+"use client"
+
 import SocialAuthentication from "@/components/SocialAuthentication";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import React, { useState } from "react";
 import { Formik } from "formik";
 import { RegisterValuesType } from "@/types";
 import { registrationValidationSchema } from "@/utils/validationSchema";
 import ErrorMessage from "@/components/ErrorMessage";
-import { registerUserMutation } from "@/hooks/api/useAuth";
+import { registerUserMutation } from "@/services/api/auth.api";
 import FormSubmissionSuccess from "@/components/FormSubmissionSuccess";
 import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
-export default function RegisterContent({
-  handleLogin,
-  onPressSignUp,
-  fromModal,
-}: {
-  handleLogin?: () => void;
-  onPressSignUp: () => void;
-  fromModal?: boolean;
-}) {
+export default function RegisterContent() {
   const [credentialError, setCredentialError] = useState<string | null>(null);
   const [registered, setRegistered] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -28,10 +22,11 @@ export default function RegisterContent({
   // hooks
   const registerMutation = registerUserMutation();
   const router = useRouter();
+  const { isFromModal, setWhichModal, resetContextState } = useAuthContext();
 
   const handleSubmit = (
     values: RegisterValuesType,
-    { resetForm }: { resetForm: () => void }
+    { resetForm }: { resetForm: () => void },
   ) => {
     setIsSubmitting(true);
     registerMutation.mutate(values, {
@@ -39,6 +34,7 @@ export default function RegisterContent({
         setIsSubmitting(false);
         if (res.success) {
           setRegistered(true);
+          resetContextState();
           resetForm();
         }
       },
@@ -54,12 +50,16 @@ export default function RegisterContent({
     });
   };
 
+   const handlePressOnLogin = () => {
+    router.push("/login");
+  };
+
   // handle press on login
-  const handlePressOnLogin = () => {
-    if (handleLogin) {
-      handleLogin();
+  const onPressSignUp = () => {
+    if (isFromModal) {
+      setWhichModal("login");
     } else {
-      return router.push("/login");
+     router.push("/login");
     }
   };
 
@@ -78,7 +78,7 @@ export default function RegisterContent({
           Registration
         </CardTitle>
       </CardHeader>
-      {fromModal && <div className="w-full py-3"></div>}
+      {isFromModal && <div className="w-full py-3"></div>}
       <CardContent className="space-y-4">
         {credentialError && (
           <div className="bg-red-200 rounded-md py-2 px-4 w-full">
@@ -88,8 +88,7 @@ export default function RegisterContent({
         <Formik
           initialValues={{ name: "", email: "", password: "" }}
           validationSchema={registrationValidationSchema}
-          onSubmit={handleSubmit}
-        >
+          onSubmit={handleSubmit}>
           {({
             values,
             errors,
@@ -146,8 +145,7 @@ export default function RegisterContent({
                 type="submit"
                 onClick={() => handleSubmit()}
                 disabled={isSubmitting}
-                className="w-full bg-red-500 hover:bg-red-600 text-white mt-3 hover:cursor-grab"
-              >
+                className="w-full bg-red-500 hover:bg-red-600 text-white mt-3 hover:cursor-grab">
                 {isSubmitting ? "Registering..." : "Register"}
               </Button>
             </form>
@@ -168,8 +166,7 @@ export default function RegisterContent({
           {"Don't Have an Account? "}
           <span
             onClick={onPressSignUp}
-            className="text-blue-600 hover:text-blue-800 cursor-pointer hover:underline"
-          >
+            className="text-blue-600 hover:text-blue-800 cursor-pointer hover:underline">
             Sign in
           </span>
         </div>

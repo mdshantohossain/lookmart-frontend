@@ -1,4 +1,4 @@
-import getSubCategoryProduct from "@/lib/api/get-sub-category-products";
+import getSubCategoryProduct from "@/services/api/sub-category-products.api";
 
 export async function generateMetadata({
   params,
@@ -8,8 +8,9 @@ export async function generateMetadata({
   const { category, subCategory } = await params;
 
   // get category product
-  const { subCat, category: cat } = (await getSubCategoryProduct(subCategory)) || {subCat: { name: "", slug: "" },
-  };
+  const { subCat, category: cat } = (await getSubCategoryProduct(
+    subCategory,
+  )) || { subCat: { name: "", slug: "" } };
 
   return {
     title: `${subCat.name} for ${cat.name}`,

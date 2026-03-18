@@ -1,11 +1,11 @@
+"use client";
+
 import ErrorMessage from "@/components/ErrorMessage";
 import SocialAuthentication from "@/components/SocialAuthentication";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { login } from "@/features/authSlice";
-import { useAppDispatch } from "@/features/hooks";
-import { loginUserMutation } from "@/hooks/api/useAuth";
+import { loginUserMutation } from "@/services/api/auth.api";
 import { LoginValuesType } from "@/types";
 import { loginValidationSchema } from "@/utils/validationSchema";
 import { Checkbox } from "@radix-ui/react-checkbox";
@@ -14,25 +14,28 @@ import { Formik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { toast } from "react-toastify";
+import { useAuth } from "@/hooks/useAuth";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
-export default function LoginContent({
-  onPressSignUp,
-  fromModal = false,
-  onCloseModal,
-}: {
-  onPressSignUp: () => void;
-  fromModal?: boolean;
-  onCloseModal?: () => void;
-}) {
+export default function LoginContent() {
   const [credentialError, setCredentialError] = useState<string | undefined>(
     undefined,
   );
 
   // hooks
-  const dispatch = useAppDispatch();
   const { mutateAsync, isPending } = loginUserMutation();
   const router = useRouter();
+  const { authLogin } = useAuth();
+
+  const { isFromModal, setWhichModal, resetContextState } = useAuthContext();
+
+  const handleSignUp = () => {
+    if (isFromModal) {
+      setWhichModal("register");
+    } else {
+      router.push("/register");
+    }
+  };
 
   const handleSubmit = (
     values: LoginValuesType,
@@ -42,19 +45,14 @@ export default function LoginContent({
       onSuccess: (res) => {
         setCredentialError(undefined);
         if (res.success) {
-          dispatch(
-            login({
-              user: res.data.user,
-              token: res.data.token,
-              addresses: res.data.user.addresses,
-            }),
-          );
-          if(onCloseModal) onCloseModal();
-          toast.success(res.message);
+          authLogin(res.data.user, res.data.token);
+
           resetForm();
-          if (fromModal) {
+
+          if (isFromModal) {
+            resetContextState();
           } else {
-            return router.replace("/");
+            router.back();
           }
         }
       },
@@ -79,7 +77,7 @@ export default function LoginContent({
           Login
         </CardTitle>
       </CardHeader>
-      {fromModal && <div className="w-full py-3"></div>}
+      {isFromModal && <div className="w-full py-3"></div>}
       <CardContent className="space-y-4">
         {credentialError && (
           <div className="bg-red-200 rounded-md py-2 px-4 w-full">
@@ -168,7 +166,7 @@ export default function LoginContent({
         <div className="text-center text-sm text-gray-600">
           {"Don't Have an Account? "}
           <span
-            onClick={onPressSignUp}
+            onClick={handleSignUp}
             className="text-blue-600 hover:text-blue-800 cursor-pointer hover:underline">
             Sign up
           </span>

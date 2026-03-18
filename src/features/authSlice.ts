@@ -25,13 +25,11 @@ const authSlice = createSlice({
       action: PayloadAction<{
         user: UserType;
         token: string;
-        addresses: AddressType[];
       }>,
     ) => {
-      Cookies.set("auth_token", action.payload.token, { expires: 7 });
+      Cookies.set("auth_token", action.payload.token);
 
       state.user = action.payload.user;
-      state.addresses = action.payload.addresses;
       state.token = action.payload.token;
       state.isAuthenticated = true;
     },
@@ -69,7 +67,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { login, addAddress,updateProfile, filterAddress, logout, addPhoneNumber } =
+export const { login, addAddress, updateProfile, filterAddress, logout, addPhoneNumber } =
   authSlice.actions;
 
 export default authSlice.reducer;

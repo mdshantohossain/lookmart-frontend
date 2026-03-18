@@ -2,12 +2,11 @@
 
 import FormSubmissionSuccess from "@/components/FormSubmissionSuccess";
 import { Card } from "@/components/ui/card";
-import { useVerifyOrder } from "@/hooks/api/verify-payment";
+import { useVerifyOrder } from "@/services/api/verify-payment";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loading from "../loading";
 import { toast } from "react-toastify";
-
 
 export default function OrderSuccessPage() {
   const [valid, setValid] = useState(false);

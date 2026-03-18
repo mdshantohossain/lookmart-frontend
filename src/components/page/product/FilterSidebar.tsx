@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
-import { getCategories } from "@/hooks/api/get-categories";
-import getBrands from "@/lib/api/get-brands";
+import { getCategories } from "@/services/api/category.api";
+import getBrands from "@/services/api/brands.api";
 import { BrandType, CategoryType, FilterType } from "@/types";
 import React, { memo, useCallback, useEffect, useState } from "react";
 
@@ -12,10 +12,7 @@ interface Props {
   sizes?: string[];
 }
 
-export const FilterSidebar = ({
-  onFilterChange,
-  sizes,
-}: Props) => {
+export const FilterSidebar = ({ onFilterChange, sizes }: Props) => {
   const [filters, setFilters] = useState<FilterType>({
     categories: [],
     brands: [],
@@ -23,9 +20,9 @@ export const FilterSidebar = ({
     price: [0, 200],
   });
 
-useEffect(() => {
-  onFilterChange(filters);
-}, [filters, onFilterChange]);
+  useEffect(() => {
+    onFilterChange(filters);
+  }, [filters, onFilterChange]);
 
   // fetch categories
   const { data: categories, isLoading: categoriesLoading } = getCategories();
@@ -118,37 +115,36 @@ useEffect(() => {
       {/* Brands */}
       {brands?.length > 0 && (
         <Card>
-        <CardContent>
-          <h3 className="font-semibold text-lg mb-4 text-balance">Brands</h3>
-          <div className="space-y-3">
-            {brands?.map((brand: BrandType) => (
-              <div
-                key={brand.name}
-                className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id={brand.name}
-                    checked={filters.brands.includes(brand.id)}
-                    onCheckedChange={(checked: boolean) =>
-                      toggleBrand(brand.id)
-                    }
-                  />
-                  <label
-                    htmlFor={brand.name}
-                    className="text-sm font-medium cursor-pointer">
-                    {brand.name}
-                  </label>
+          <CardContent>
+            <h3 className="font-semibold text-lg mb-4 text-balance">Brands</h3>
+            <div className="space-y-3">
+              {brands?.map((brand: BrandType) => (
+                <div
+                  key={brand.name}
+                  className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id={brand.name}
+                      checked={filters.brands.includes(brand.id)}
+                      onCheckedChange={(checked: boolean) =>
+                        toggleBrand(brand.id)
+                      }
+                    />
+                    <label
+                      htmlFor={brand.name}
+                      className="text-sm font-medium cursor-pointer">
+                      {brand.name}
+                    </label>
+                  </div>
+                  <span className="text-xs text-muted-foreground">
+                    ({brand.products_count})
+                  </span>
                 </div>
-                <span className="text-xs text-muted-foreground">
-                  ({brand.products_count})
-                </span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       )}
-      
 
       {/* Sizes */}
       {sizes && sizes.length > 0 && (
@@ -185,7 +181,6 @@ useEffect(() => {
       )}
     </div>
   );
-}
+};
 
-
-export default FilterSidebar
+export default FilterSidebar;

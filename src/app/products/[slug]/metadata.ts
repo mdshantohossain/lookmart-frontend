@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { APP_URL } from "@/config/env";
-import { getProductDetail } from "@/lib/api/product-detail";
+import { getProductDetail } from "@/services/api/product-detail.api";
 
 export async function generateMetadata({
   params,

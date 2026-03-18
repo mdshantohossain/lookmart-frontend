@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import ProductsContent from "@/components/ProductsContent";
 import ProductsSkeleton from "@/components/skeleton/ProductsSkeleton";
-import getCategoryProduct from "@/lib/api/get-category-products";
+import getCategoryProduct from "@/services/api/category-products.api";
 import EmptyContent from "@/components/EmptyContent";
 import images from "@/utils/images";
 import { generateMetadata } from "./metadata";

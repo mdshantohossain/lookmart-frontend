@@ -2,8 +2,8 @@ import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import { addWishlistItem, removeWishlistItem } from "@/features/wishlilstSlice";
 import { CartItemType, ProductType } from "@/types";
 import { toast } from "react-toastify";
-import { useCreateWishlist } from "./api/useWishlist";
-import { v4 as uuidv4 } from 'uuid';
+import { useCreateWishlist } from "../services/api/wishlist.api";
+import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
 
 export const useWishlist = () => {
@@ -31,12 +31,12 @@ export const useWishlist = () => {
   };
 
   const removeWishlist = (id: number) => {
-    if (typeof id === 'string' &&  id === 'all') {
+    if (typeof id === "string" && id === "all") {
       removeWishlistItem(id);
       return;
     }
 
-    removeWishlistItem(id)
+    removeWishlistItem(id);
     toast.success("Product moved from wishlist");
   };
 
