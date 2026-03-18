@@ -44,6 +44,8 @@ export default function CheckoutPage() {
   const { authLogin } = useAuth();
   const { setIsAuthModalOpen, setIsFromModal } = useAuthContext();
 
+  console.log(user);
+
   // default delivery hooks
   const defaultDeliveryMethod = useMemo(() => {
     if (!shipping || shipping.length === 0) return 0;
