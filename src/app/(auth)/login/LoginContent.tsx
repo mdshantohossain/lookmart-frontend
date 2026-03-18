@@ -15,7 +15,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useAuthModalContext } from "@/hooks/useAuthModalContext";
 
 export default function LoginContent() {
   const [credentialError, setCredentialError] = useState<string | undefined>(
@@ -27,7 +27,7 @@ export default function LoginContent() {
   const router = useRouter();
   const { authLogin } = useAuth();
 
-  const { isFromModal, setWhichModal, resetContextState } = useAuthContext();
+  const { isFromModal, setWhichModal, resetContextState } = useAuthModalContext();
 
   const handleSignUp = () => {
     if (isFromModal) {

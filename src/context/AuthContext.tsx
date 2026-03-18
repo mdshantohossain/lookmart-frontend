@@ -17,13 +17,12 @@ interface AuthContextType {
   resetContextState: () => void
 }
 
-export const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthModalContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isFromModal, setIsFromModal] = useState(false);
   const [whichModal, setWhichModal] = useState<"login" | "register">("login");
-
 
   const resetContextState = () => {
     setIsAuthModalOpen(false);
@@ -32,7 +31,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   }
 
   return (
-    <AuthContext.Provider
+    <AuthModalContext.Provider
       value={{
         isAuthModalOpen,
         setIsAuthModalOpen,
@@ -43,6 +42,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         resetContextState
       }}>
       {children}
-    </AuthContext.Provider>
+    </AuthModalContext.Provider>
   );
 };

@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useAppSelector } from "@/features/hooks";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useAuthModalContext } from "@/hooks/useAuthModalContext";
 import { useCreateReview } from "@/services/api/create-review.api";
 import { ReviewType } from "@/types";
 import images from "@/utils/images";
@@ -34,7 +34,7 @@ export default function ProductReview({
   // hooks
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const { mutateAsync, isPending } = useCreateReview();
-  const { setIsAuthModalOpen, setIsFromModal } = useAuthContext();
+  const { setIsAuthModalOpen, setIsFromModal } = useAuthModalContext();
 
   useEffect(() => {
     if (isAuthenticated && pendingSubmit) {

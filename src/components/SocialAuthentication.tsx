@@ -16,14 +16,14 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { SocialLoginResponse, UserType } from "@/types";
 import { AxiosError } from "axios";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useAuthModalContext } from "@/hooks/useAuthModalContext";
 
 export default function SocialAuthentication() {
   const { mutateAsync } = useSocialLoginMutation();
   const { authLogin } = useAuth();
   const router = useRouter();
   const { isFromModal, setIsAuthModalOpen, resetContextState } =
-    useAuthContext();
+    useAuthModalContext();
 
   const successJob = (user: UserType, token: string) => {
     // set auth state

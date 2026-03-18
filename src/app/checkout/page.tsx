@@ -24,7 +24,7 @@ import { toast } from "react-toastify";
 import { addPhoneNumber } from "@/features/authSlice";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useAuthModalContext } from "@/hooks/useAuthModalContext";
 
 export default function CheckoutPage() {
   // States for Variant Confirmation
@@ -42,7 +42,7 @@ export default function CheckoutPage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { authLogin } = useAuth();
-  const { setIsAuthModalOpen, setIsFromModal } = useAuthContext();
+  const { setIsAuthModalOpen, setIsFromModal } = useAuthModalContext();
 
   console.log(user);
 

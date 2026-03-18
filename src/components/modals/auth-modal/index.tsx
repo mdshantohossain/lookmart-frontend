@@ -2,12 +2,12 @@
 
 import LoginContent from "@/app/(auth)/login/LoginContent";
 import RegisterContent from "@/app/(auth)/register/RegisterContent";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useAuthModalContext } from "@/hooks/useAuthModalContext";
 import { X } from "lucide-react";
 
 export default function AuthModal() {
   const { isAuthModalOpen, setIsAuthModalOpen, setIsFromModal, whichModal } =
-    useAuthContext();
+    useAuthModalContext();
 
   if (!isAuthModalOpen) return null;
 

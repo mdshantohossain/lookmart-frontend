@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import SocialAuthentication from "@/components/SocialAuthentication";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import ErrorMessage from "@/components/ErrorMessage";
 import { registerUserMutation } from "@/services/api/auth.api";
 import FormSubmissionSuccess from "@/components/FormSubmissionSuccess";
 import { useRouter } from "next/navigation";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useAuthModalContext } from "@/hooks/useAuthModalContext";
 
 export default function RegisterContent() {
   const [credentialError, setCredentialError] = useState<string | null>(null);
@@ -22,7 +22,7 @@ export default function RegisterContent() {
   // hooks
   const registerMutation = registerUserMutation();
   const router = useRouter();
-  const { isFromModal, setWhichModal, resetContextState } = useAuthContext();
+  const { isFromModal, setWhichModal, resetContextState } = useAuthModalContext();
 
   const handleSubmit = (
     values: RegisterValuesType,
@@ -50,7 +50,7 @@ export default function RegisterContent() {
     });
   };
 
-   const handlePressOnLogin = () => {
+  const handlePressOnLogin = () => {
     router.push("/login");
   };
 
@@ -59,7 +59,7 @@ export default function RegisterContent() {
     if (isFromModal) {
       setWhichModal("login");
     } else {
-     router.push("/login");
+      router.push("/login");
     }
   };
 
