@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email - LookMart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .email-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Header Section */
+        .email-header {
+            background: linear-gradient(135deg, #ff2b35 0%, #d72636 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(20px); }
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Main Content */
+        .email-body {
+            padding: 50px 40px;
+        }
+
+        .greeting {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .email-body p {
+            color: #555555;
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            color: #ff2b35;
+            font-weight: 600;
+        }
+
+        .cta-section {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff2b35 0%, #d72636 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 16px 48px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 43, 53, 0.3);
+            display: inline-block;
+            border: 2px solid transparent;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255, 43, 53, 0.4);
+        }
+
+        .link-alternative {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #888888;
+        }
+
+        .link-alternative a {
+            color: #ff2b35;
+            text-decoration: none;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .divider {
+            height: 1px;
+            background: #eeeeee;
+            margin: 40px 0;
+        }
+
+        /* Support Section */
+        .support-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .support-section h4 {
+            color: #1a1a1a;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .support-section p {
+            color: #666666;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .support-section a {
+            color: #ff2b35;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Security Notice */
+        .security-notice {
+            background: #fff5f5;
+            border-left: 4px solid #ff2b35;
+            padding: 15px 20px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+        }
+
+        .security-notice p {
+            color: #555555;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        /* Footer */
+        .email-footer {
+            background: #1a1a1a;
+            color: #cccccc;
+            padding: 30px 40px;
+            text-align: center;
+            border-top: 1px solid #333333;
+        }
+
+        .footer-content p {
+            font-size: 13px;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #333333;
+        }
+
+        .footer-links a {
+            color: #cccccc;
+            text-decoration: none;
+            font-size: 12px;
+            margin: 0 12px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ff2b35;
+        }
+
+        .copyright {
+            font-size: 12px;
+            color: #888888;
+            margin-top: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .email-body {
+                padding: 30px 20px;
+            }
+
+            .greeting {
+                font-size: 20px;
+            }
+
+            .email-body p {
+                font-size: 14px;
+            }
+
+            .cta-button {
+                width: 100%;
+                padding: 14px 30px;
+                font-size: 15px;
+            }
+
+            .email-footer {
+                padding: 20px 15px;
+            }
+
+            .footer-links {
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+
+            .footer-links a {
+                display: block;
+                margin: 8px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <!-- Header -->
+        <div class="email-header">
+            <div class="logo">LookMart</div>
+            <p class="header-subtitle">Email Verification Required</p>
+        </div>
+
+        <!-- Body -->
+        <div class="email-body">
+            <h1 class="greeting">Welcome to LookMart!</h1>
+
+            <p>Hi <span class="highlight">{{USER_NAME}}</span>,</p>
+
+            <p>Thank you for creating your LookMart account. We're thrilled to have you join our community of smart shoppers and sellers.</p>
+
+            <p>To get started and unlock all the features, please verify your email address by clicking the button below:</p>
+
+            <!-- CTA Button -->
+            <div class="cta-section">
+                <a href="{{VERIFICATION_URL}}" class="cta-button">Verify Email Address</a>
+                <div class="link-alternative">
+                    Or copy this link: <a href="{{VERIFICATION_URL}}">{{VERIFICATION_URL}}</a>
+                </div>
+            </div>
+
+            <div class="security-notice">
+                <p><strong>🔒 Security Notice:</strong></p>
+                <p>This link will expire in 24 hours. If you didn't create this account, please ignore this email or contact our support team immediately.</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Support Section -->
+            <div class="support-section">
+                <h4>Having trouble?</h4>
+                <p>If the button above doesn't work, or you need assistance:</p>
+                <p>📧 Email us: <a href="mailto:support@lookmart.com">support@lookmart.com</a></p>
+                <p>💬 Chat with us: <a href="https://lookmart.com/support">Start a conversation</a></p>
+            </div>
+
+            <p style="color: #999999; font-size: 13px; font-style: italic;">
+                This is an automated message. Please do not reply to this email directly.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="email-footer">
+            <div class="footer-content">
+                <p>LookMart — Your trusted platform for buying and selling</p>
+                <p>Building the future of e-commerce, one transaction at a time.</p>
+            </div>
+            <div class="footer-links">
+                <a href="https://lookmart.com">Website</a>
+                <a href="https://lookmart.com/privacy">Privacy Policy</a>
+                <a href="https://lookmart.com/terms">Terms of Service</a>
+                <a href="https://lookmart.com/contact">Contact</a>
+            </div>
+            <div class="copyright">
+                © 2026 LookMart. All rights reserved. | 123 Commerce Street, Suite 100
+            </div>
+        </div>
+    </div>
+</body>
+</html>
