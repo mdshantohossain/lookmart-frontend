@@ -3,11 +3,11 @@ import {
   updateCartItem,
   removeCartItem as removeItem,
   updateQuantity,
+  resetCart,
 } from "@/features/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import {
   CartItemType,
-  ProcessedVariantKeyType,
   UpdatedVariantKeyType,
 } from "@/types";
 import { toast } from "react-toastify";
@@ -52,6 +52,8 @@ export const useCart = () => {
     dispatch(updateCartItem({ id, newVariant }));
   };
 
+  const emptyCart = () => dispatch(resetCart()); 
+
   return {
     items,
     cartTotal,
@@ -60,5 +62,6 @@ export const useCart = () => {
     removeCartItem,
     updateItemQuantity,
     updateCartItemVariant,
+    emptyCart
   };
 };

@@ -30,7 +30,6 @@ export function getDeliveryDateInfo(deliveryDay?: number): DeliveryInfo {
 
 // Format selling price to always show ".99"
 export const formatPrice = (price: number) => {
-
   const str = price.toString().trim();
 
   // 💡 Case 1: Price contains decimals
@@ -39,14 +38,29 @@ export const formatPrice = (price: number) => {
 
     // Protect empty decimal or integer
     return {
-      integer: integer ,
-      decimal: (decimal)
+      integer: integer,
+      decimal: decimal,
     };
   }
 
   // 💡 Case 2: Integer price → force `.99`
   return {
     integer: str,
-    decimal: "00"
+    decimal: "00",
   };
 };
+
+// ISO time formate
+export const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+
+  return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    })
+    .replace(/ (\d{4})$/, ", $1");
+};
+
+
+

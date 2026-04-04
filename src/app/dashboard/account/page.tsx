@@ -170,9 +170,9 @@ export default function AccountPage() {
                   type="submit"
                   className="w-full sm:w-auto rounded-xl px-8 hover:cursor-pointer"
                   disabled={
-                    values.name === user?.name && values.phone === user?.phone
+                    (values.name === user?.name && values.phone === user?.phone) || isProfileUpdatePending
                   }>
-                  {isProfileUpdatePending ? "Updating..." : "Update"} Changes
+                  {isProfileUpdatePending ? "Changes Updating..." : "Update Changes"} 
                 </Button>
               </CardContent>
             </form>

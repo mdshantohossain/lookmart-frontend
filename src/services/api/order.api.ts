@@ -2,7 +2,7 @@ import api from "@/config/axios-config";
 import { API_URL } from "@/config/env";
 import { useAppSelector } from "@/features/hooks";
 import { CheckoutPayload } from "@/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 type OrderPayloadType = CheckoutPayload & {
@@ -29,19 +29,14 @@ export const useOrderPlace = () => {
   });
 };
 
-
 // get user orders
-export const useGetOrders = () => {
-  const { user } = useAppSelector((state) => state.auth);
-  return useMutation({
-    mutationKey: ["orders", "list"],
-    mutationFn: async () => {
-      const res = await api.get(`${API_URL}/orders/${user?.id}`);
+export const useOrders = () => {
+  return useQuery({
+    queryKey: ["total-orders"],
+    queryFn: async () => {
+      const { data } = await api.get(`${API_URL}/orders`);
 
-     console.log('addresse res', res.data);
-      return res.data;
+      return data.data;
     },
   });
-}
-
-
+};

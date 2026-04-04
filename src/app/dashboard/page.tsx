@@ -3,23 +3,27 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, MapPin, User, Clock } from "lucide-react";
 import { useAppSelector } from "@/features/hooks";
+import { useOrders } from "@/services/api/order.api";
+import { useAddresses } from "@/services/api/address.api";
 
 export default function DashboardPage() {
-  const { user, addresses } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
 
-  const status =
-    user?.status === 1 ? "Active" : user?.status === 0 ? "Blocked" : "Inactive";
+  const { data: orders } = useOrders();
+  const { data: addresses } = useAddresses();
+
+  const status = user?.status === 1 ? "Active" : "Inactive";
 
   const stats = [
     {
       title: "Total Orders",
-      value: user?.orders_count,
+      value: orders?.length || 0,
       icon: Package,
       color: "text-blue-600",
     },
     {
       title: "Saved Addresses",
-      value: addresses?.length,
+      value: addresses?.length || 0,
       icon: MapPin,
       color: "text-green-600",
     },

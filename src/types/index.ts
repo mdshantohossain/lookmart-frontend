@@ -1,4 +1,3 @@
-
 export type CheckoutPayload = {
   user_id?: number;
   name?: string;
@@ -239,3 +238,52 @@ export type SocialLoginResponse = {
     token: string;
   };
 };
+
+// order item type
+export type OrderedItem = {
+  product: ProductType;
+  quantity: number;
+  product_id: number;
+  price: number;
+  discount: string;
+};
+
+// order payment type
+export type PaymentType = {
+  bank_type: string;
+  status: number;
+};
+
+export type OrderStatus = 0 | 1 | 2 | 3;
+// 0: Pending, 1: Processing, 2: Delivered, 3: Canceled
+
+export type PaymentStatus = 0 | 1 | 2;
+// 0: Unpaid; 1: Paid; 2: Refunded
+
+export type ChargeStatus = 0 | 1;
+// 0: Unpaid, 1: Paid
+
+export interface OrderedType {
+  id: number;
+  order_number: string;
+  order_total: number;
+  order_status: OrderStatus;
+  payment?: PaymentType;
+
+  payment_type: 0 | 1;
+  payment_status: PaymentStatus;
+  paid_at: string | null;
+
+  delivery_charge: number;
+  charge_status: ChargeStatus;
+
+  order_details: OrderedItem[];
+
+  delivery_address: string;
+  delivery_at: string | null;
+
+  phone: string;
+  slug: string;
+  created_at: string;
+  updated_at: string;
+}

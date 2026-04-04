@@ -17,7 +17,7 @@ export const useAuth = () => {
     });
 
     queryClient.invalidateQueries({
-      queryKey: ["orders"],
+      queryKey: ["total-orders"],
     });
   };
 

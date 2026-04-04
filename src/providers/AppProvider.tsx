@@ -1,13 +1,6 @@
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider } from "@/context/AuthModalContext";
 import { PropsWithChildren } from "react";
 
-
-export const AppProvider = ({children}: PropsWithChildren) => {
-
-
-    return (
-        <AuthProvider>
-            {children}
-        </AuthProvider>
-    )
-}
+export const AppProvider = ({ children }: PropsWithChildren) => {
+  return <AuthProvider>{children}</AuthProvider>;
+};
