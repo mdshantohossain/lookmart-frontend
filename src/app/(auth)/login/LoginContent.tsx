@@ -27,7 +27,8 @@ export default function LoginContent() {
   const router = useRouter();
   const { authLogin } = useAuth();
 
-  const { isFromModal, setWhichModal, resetContextState } = useAuthModalContext();
+  const { isFromModal, setWhichModal, resetContextState } =
+    useAuthModalContext();
 
   const handleSignUp = () => {
     if (isFromModal) {
@@ -52,7 +53,8 @@ export default function LoginContent() {
           if (isFromModal) {
             resetContextState();
           } else {
-            router.back();
+            console.log("redirect back");
+            return router.back();
           }
         }
       },
@@ -63,7 +65,7 @@ export default function LoginContent() {
 
         const status = axiosError.response?.status;
 
-        status === 422 || status === 400
+        status === 422 || status === 400 || status === 401 || status === 403
           ? setCredentialError(axiosError.response?.data.message)
           : setCredentialError("Login failed. Please try again.");
       },

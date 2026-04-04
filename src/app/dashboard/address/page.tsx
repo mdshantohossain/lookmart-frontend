@@ -30,6 +30,7 @@ import { AddressType } from "@/types";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import { addressValidationSchema } from "@/utils/validationSchema";
 import {
+  useAddresses,
   useDeleteAddress,
   useSaveAddressMutaion,
   useUpdateAddressMutaion,
@@ -56,7 +57,8 @@ export default function AddressPage() {
   };
 
   // hooks
-  const { user, addresses } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
+  const { data: addresses } = useAddresses();
 
   const saveAddressMutation = useSaveAddressMutaion();
   const deleteMutation = useDeleteAddress();
@@ -162,7 +164,7 @@ export default function AddressPage() {
 
       {/* Address Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {addresses?.map((addr) => (
+        {addresses?.map((addr: AddressType) => (
           <Card
             key={addr.id}
             className={`group relative overflow-hidden border-2 transition-all hover:shadow-md ${addr.is_default ? "border-primary/20 bg-primary/5" : "border-slate-100"}`}>

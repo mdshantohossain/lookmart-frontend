@@ -37,7 +37,7 @@ const VerifyEmailContent = () => {
     if (isLoading) {
       setContentState({
         status: "loading",
-        title: "Verifying Your Email",
+        title: "Email verifying...",
         message: "Please wait while we confirm your email address...",
       });
       return;
@@ -62,7 +62,7 @@ const VerifyEmailContent = () => {
     if (response && response.success) {
       setContentState({
         status: "success",
-        title: "Email Verified Successfully!",
+        title: "Email Verified Successful!",
         message:
           response.message ||
           "Your email address has been verified. You can now log in to your account.",

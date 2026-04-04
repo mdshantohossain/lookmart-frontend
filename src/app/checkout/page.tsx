@@ -10,7 +10,7 @@ import { checkoutSchema } from "@/services/schema";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import VariantConfirmationModal from "@/components/page/checkout/VariantConfirmationModal";
 
-import { useOrderPlace } from "@/services/api/order-api";
+import { useOrderPlace } from "@/services/api/order.api";
 import { DynamicIcon } from "lucide-react/dynamic";
 import { Label } from "@radix-ui/react-label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -30,14 +30,14 @@ export default function CheckoutPage() {
   // States for Variant Confirmation
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [orderPayload, setOrderPayload] = useState<CheckoutPayload | null>(
-    null
+    null,
   );
   const [orderError, setOrderError] = useState<string>("");
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(0);
 
   // hooks
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
-  const { items, cartTotal } = useCart();
+  const { items, cartTotal, emptyCart } = useCart();
   const { data: shipping } = useShipping();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -96,6 +96,12 @@ export default function CheckoutPage() {
   // hooks
   const { mutateAsync, isPending } = useOrderPlace();
 
+  const products = items.map((item) => ({
+    product_id: item.product_id,
+    variant_id: item.variant_id!,
+    quantity: item.quantity,
+  }));
+
   // submit form after check confirmation
   const handleFinalOrder = () => {
     if (!orderPayload) return;
@@ -106,11 +112,6 @@ export default function CheckoutPage() {
     }
     // Map cart items to only what backend needs
     if (items.length === 0) return;
-    const products = items.map((item) => ({
-      product_id: item.product_id,
-      variant_id: item.variant_id!,
-      quantity: item.quantity,
-    }));
 
     // calculate order total
     const orderTotal = cartTotal + shippingCost;
@@ -136,16 +137,20 @@ export default function CheckoutPage() {
               }
             }
 
+            // reset cart
+            emptyCart();
+
             // redirect to paymentgateway
             if (payment_url) {
               window.location.href = payment_url;
             }
 
+            // if no payment gateway redirect to order success
             if (!payment_url && token) {
               router.push("/order-success?token=" + token);
             }
           } else {
-            toast.error(res.message);
+            setOrderError(res.message);
           }
         },
         onError: (err) => {
@@ -182,7 +187,7 @@ export default function CheckoutPage() {
   return (
     <div className="bg-background">
       {/* 📦 Variant & Quantity Confirmation Modal */}
-      {isConfirmModalOpen && (
+      {isConfirmModalOpen && items.length > 0 && (
         <VariantConfirmationModal
           onClose={() => setIsConfirmModalOpen(false)}
           onConfirm={handleFinalOrder}
@@ -389,9 +394,13 @@ export default function CheckoutPage() {
 
                   <Button
                     type="submit"
-                    disabled={isPending}
+                    disabled={products.length === 0 || isPending}
                     className="w-full bg-red-500 text-white hover:bg-red-600 transition-colors hover:cursor-grab">
-                    {isPending ? "Order Processing" : "Place Order"}
+                    {products.length === 0
+                      ? "Please select at least one product to place an order."
+                      : isPending
+                        ? "Order Processing..."
+                        : "Place Order"}
 
                     {isPending && (
                       <div

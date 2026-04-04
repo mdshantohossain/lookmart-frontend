@@ -2,7 +2,6 @@ import { API_URL } from "@/config/env";
 import api from "@/config/axios-config";
 import { AddressType } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useAppSelector } from "@/features/hooks";
 
 // add address
 export const useSaveAddressMutaion = () => {
@@ -48,16 +47,13 @@ export const useDeleteAddress = () => {
 };
 
 // get addresses
-export const getAddresses = () => {
-    const { user } = useAppSelector((state) => state.auth);
-  
+export const useAddresses = () => {
   return useQuery({
-    queryKey: ["addresses", "list"],
+    queryKey: ["addresses"],
     queryFn: async () => {
-      const res = await api.get(`${API_URL}/addresses/${user?.id}`);
+      const { data } = await api.get(`${API_URL}/addresses`);
 
-      console.log('addresse res', res.data);
-      return res.data;
+      return data.data;
     },
   });
 };
